@@ -48,7 +48,7 @@ public:
 	std::tuple<size_t, double> solve(const std::vector<double>& rhs, std::vector<double>& x) const;
 
 	// Performs matrix-vector multiplication in form:
-	//     rhs += coef * M*x
+	//     ret += coef * M*x
 	void mult_vec(const std::vector<double>& x, double coef, std::vector<double>& ret) const;
 
 	// Converts matrix to csr format
@@ -192,8 +192,8 @@ std::tuple<size_t, double> SparseMatrix::solve(const std::vector<double>& rhs, s
 
 	boost::property_tree::ptree prm;
 	prm.put("solver.type", "fgmres");
-	prm.put("solver.tol", 1e-6);
-	prm.put("solver.maxiter", 1000);
+	prm.put("solver.tol", solver_tolerance);
+	prm.put("solver.maxiter", solver_maximum_iterations);
 	prm.put("precond.coarsening.type", "smoothed_aggregation");
 	prm.put("precond.relax.type", "spai0");
 
