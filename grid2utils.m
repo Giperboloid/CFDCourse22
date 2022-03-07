@@ -9,8 +9,9 @@
 %
 %                -- Geometry data
 %                vert                    - vertex coordinates, [Nvert, 2] array
-%                elem_center             - elements centers, [Nelem, 2] array
 %                face_center             - face centers, [Nface, 2] array
+%                elem_center             - elements centers, [Nelem, 2] array
+
 %                elem_volume             - volumes of elements, [Nelem] array
 %                face_area               - face areas, [Nface] array
 %                face_elem_distance      - distances from face center to connected element centers, [Nface, 2] array.
