@@ -17,6 +17,8 @@ properties
 	mass
 	% local stiffness matrix. [2, 2] array
 	stiff
+	% local transport matrix. [2, 2] array for one dimension = {[2, 2]}
+	tran
 	% local lumped mass matrix. [1, 2] array
 	lumped_mass
 
@@ -38,6 +40,7 @@ methods
 		ret.mass = L * [1/3, 1/6; 1/6, 1/3];
 		ret.stiff = 1.0/L * [ 1, -1; -1,  1];
 		ret.lumped_mass = L*[1/2; 1/2];
+		ret.tran = {[-1/2, 1/2; -1/2, 1/2]};
 
 		ret._p0 = vertices(1);
 	endfunction

@@ -15,14 +15,16 @@ properties
 		@(xi) xi(1)*(1-xi(2));
 		@(xi) xi(1)*xi(2);
 		@(xi) (1 - xi(1))*xi(2); }
-	% global indices of local vertices. [1, 2] array of indices
+	% global indices of local vertices. [1, 4] array of indices
 	ibasis
-	% local mass matrix. [2, 2] array
+	% local mass matrix. [4, 4] array
 	mass
-	% local stiffness matrix. [2, 2] array
+	% local stiffness matrix. [4, 4] array
 	stiff
-	% local lumped mass matrix. [1, 2] array
+	% local lumped mass matrix. [1, 4] array
 	lumped_mass
+	% local transport matrix. [4, 4] array for two dimensions = {[4, 4], [4, 4]}
+	tran
 
 	_p0
 	_l
@@ -55,12 +57,26 @@ methods
 			-Ly^2-Lx^2,      Ly^2-2*Lx^2,    2*(Ly^2+Lx^2),  Lx^2-2*Ly^2;
 			 Ly^2-2*Lx^2,   -Ly^2-Lx^2,      Lx^2-2*Ly^2,    2*(Ly^2+Lx^2)];
 
-		ret.lumped_mass = Lx*Ly[...
+		ret.lumped_mass = Lx*Ly*[...
 			1/4;
 			1/4;
 			1/4;
 			1/4;
 		];
+
+		ret.tran = {...
+			Ly/12*[-2, 2, 1, -1;
+			       -2, 2, 1, -1;
+			       -1, 1, 2, -2;
+			       -1, 1, 2, -2],...
+			Lx/12*[-2, -1, 1, 2;
+			       -1, -2, 2, 1;
+			       -1, -2, 2, 1;
+			       -2, -1, 1, 2]
+		}
+	)
+
+	)
 	endfunction
 
 	% convert point in physical space to point in parametric space

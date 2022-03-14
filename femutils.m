@@ -33,3 +33,19 @@ function fem_elements_report(elements)
 		endif
 	endfor
 endfunction
+
+function ret1 = fem_algebraic_upwinding(Tran)
+	n = size(Tran, 1);
+	for i = 1:n
+	for j = i+1:n
+		if Tran(i, j) > 0
+			diff = Tran(i, j);
+			Tran(i, i) += diff;
+			Tran(j, j) += diff;
+			Tran(i, j) -= diff;
+			Tran(j, i) -= diff;
+		endif
+	endfor
+	endfor
+	ret1 = Tran;
+endfunction
