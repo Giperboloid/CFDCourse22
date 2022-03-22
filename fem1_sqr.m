@@ -16,7 +16,7 @@ Nelem = 10;
 % number of vertices
 Nvert = Nelem + 1;
 % number of basis functions
-Nbasis = Nvert;
+Nbasis = Nvert + Nelem;
 % vertices of computational grid: equidistant meshing
 grid = linspace(A, B, Nvert);
 % solution vector
@@ -30,7 +30,8 @@ endfor
 elements = cell(1, Nelem);
 for ielem = 1:Nelem
 	vert = [grid(ielem); grid(ielem+1)];
-	elements{ielem} = D1Lin(vert, [ielem, ielem+1]);
+	bas = [ielem, ielem+1, Nvert+ielem];
+	elements{ielem} = D1Sqr(vert, bas);
 endfor
 fem_elements_report(elements);
 
@@ -38,20 +39,20 @@ fem_elements_report(elements);
 % 2. ============================= Analytical Functions
 % Known exact solution (analytical function)
 function ret = uexact(x)
-	%ret = 3*x^5 -1* x^4 -1*x^3 - 3*x^2 + x;
-	ret = sin(9*(x+0.2).^2);
+	ret = 3*x^5 -1* x^4 -1*x^3 - 3*x^2 + x;
+	%ret = sin(9*(x+0.2).^2);
 endfunction
 
 % K(x) (known analytical function)
 function ret = kfun(x)
-	%ret = 1;
-	ret = 1.0/(18*18*(x+0.2));
+	ret = 1;
+	%ret = 1.0/(18*18*(x+0.2));
 endfunction
 
 % F(x) right side function (known analytical function)
 function ret = ffun(x)
-	%ret = -(60*x^3 - 12*x^2 - 6*x - 6) + uexact(x);
-	ret = (x + 1.2)*uexact(x);
+	ret = -(60*x^3 - 12*x^2 - 6*x - 6) + uexact(x);
+	%ret = (x + 1.2)*uexact(x);
 endfunction
 
 function ret = find_elem(x)
@@ -82,6 +83,9 @@ for i=1:Nelem
 endfor
 for i=1:Nvert
 	fvec(end+1, 1) = ffun(grid(i));
+endfor
+for i=Nvert+1:Nbasis
+	fvec(end+1, 1) = ffun(center(i-Nvert));
 endfor
 assert(size(fvec, 1) == Nbasis);
 
