@@ -1,0 +1,4 @@
+-I src
+-Wall
+-Wno-unknown-pragmas
+-std=c++17

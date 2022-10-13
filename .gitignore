@@ -1,3 +1,6 @@
 *.swp
 bu
 result.vtk
+octave-workspace
+~*
+ns/build*

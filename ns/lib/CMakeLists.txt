@@ -1,0 +1,44 @@
+set(SRC
+	prob/poisson_solver.cpp
+	prob/monitor.cpp
+	prob/nonstationary_problem.cpp
+	psi_omega/psi_omega_solver.cpp
+	psi_omega/psi_omega_semi_imp_vc.cpp
+	slae/csrmat.cpp
+	slae/matrix_solver.cpp
+	grid/grid.cpp
+	grid/grid_boundary.cpp
+	grid/grid_builder.cpp
+	appr/spatial_approximator.cpp
+	appr/fem_approximator.cpp
+	appr/fe_element.cpp
+	appr/fe_linear_segment.cpp
+	appr/fe_linear_triangle.cpp
+	appr/fe_linear_quadrangle.cpp
+	appr/linear_fem_approximator.cpp
+)
+
+set(HEADERS 
+	common.hpp
+	geom.hpp
+	prob/poisson_solver.hpp
+	prob/monitor.hpp
+	prob/nonstationary_problem.hpp
+	psi_omega/psi_omega_bc.hpp
+	psi_omega/psi_omega_solver.hpp
+	psi_omega/psi_omega_semi_imp_vc.hpp
+	slae/csrmat.hpp
+	slae/matrix_solver.hpp
+	grid/grid.hpp
+	grid/grid_boundary.hpp
+	grid/grid_builder.hpp
+	appr/spatial_approximator.hpp
+	appr/fem_approximator.hpp
+	appr/fe_element.hpp
+	appr/fe_linear_segment.hpp
+	appr/fe_linear_triangle.hpp
+	appr/fe_linear_quadrangle.hpp
+	appr/linear_fem_approximator.hpp
+)
+
+add_library(${CFDLIB_TARGET} STATIC ${SRC} ${HEADERS})
