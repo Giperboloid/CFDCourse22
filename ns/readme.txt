@@ -20,8 +20,8 @@ boost_1_78_0\*     {внутри неё должна быть в том числ
 
 - в файле winbuild64.bat подставить пути к этим папкам в соответствующие строчки. Например
 
-SET CMBOOST_ROOT="c:/libs/boost_1_78_0"
-SET CMBAMGCL_ROOT="c:/libs/amgcl-1.4.2"
+SET CMBOOST_ROOT="c:/lib/boost_1_78_0"
+SET CMBAMGCL_ROOT="c:/lib/amgcl-1.4.2"
 
 - запустить скрипт winbuild64.bat. Появится папка build64 с проектом. 
 
