@@ -8,9 +8,9 @@ APsiOmegaSolver::APsiOmegaSolver(std::shared_ptr<ASpatialApproximator> psi_appro
 	_omega.resize(_omega_approximator->n_bases());
 }
 
-void APsiOmegaSolver::set_re(double re){
-	if (re <= 0) throw std::runtime_error("Invalid Reynolds number");
-	_re = re;
+void APsiOmegaSolver::set_reynolds(double reynolds){
+	if (reynolds <= 0) throw std::runtime_error("Invalid Reynolds number");
+	_reynolds = reynolds;
 }
 
 void APsiOmegaSolver::set_initial_condition_zero(){

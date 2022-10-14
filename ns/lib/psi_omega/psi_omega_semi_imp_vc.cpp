@@ -55,7 +55,7 @@ public:
 		const std::vector<double>& stiff = _approximator->stiff();
 		std::vector<double> lhs(mass.size());
 		for (size_t i=0; i<mass.size(); ++i){
-			lhs[i] = mass[i] + _tau / slv->re() * stiff[i];
+			lhs[i] = mass[i] + _tau / slv->reynolds() * stiff[i];
 		}
 		// leave only mass for wall boundary
 		const std::vector<int>& saddr = _approximator->stencil().addr();

@@ -13,20 +13,20 @@ public:
 	virtual ~APsiOmegaSolver() = default;
 
 	// setters
-	void set_re(double re);
+	void set_reynolds(double re);
 	void set_initial_condition_zero();
 	template<typename T>
 	void set_boundary_condition(int btype, T bc);
 
 	// getters
-	double re() const { return _re; }
+	double reynolds() const { return _reynolds; }
 	template<typename T>
 	std::map<int, const T*> boundary_condition_by_class() const;
 
 	const std::vector<double>& psi() const;
 	const std::vector<double>& omega() const;
 protected:
-	double _re = 0;
+	double _reynolds = 0;
 	std::vector<double> _psi, _omega;
 	std::shared_ptr<ASpatialApproximator> _psi_approximator;
 	std::shared_ptr<ASpatialApproximator> _omega_approximator;

@@ -16,7 +16,7 @@ int main(){
 	PsiOmega_SemiImpVC slv(linear_fem);
 
 	// === physical parameters
-	slv.set_re(100);
+	slv.set_reynolds(100);
 
 	// === solver parameters
 	slv.set_tau(0.01);
