@@ -207,25 +207,25 @@ std::vector<int> Grid::tab_point_face(int ipoint) const{
 	return _cache.tab_point_face[ipoint];
 }
 
-Grid::face_cell_entry_t Grid::tab_face_cell(int iface) const{
+Grid::FaceCellEntry Grid::tab_face_cell(int iface) const{
 	return _tab_face_cell[iface];
 }
 
-std::vector<Grid::cell_face_entry_t> Grid::tab_cell_face(int icell) const{
+std::vector<Grid::CellFaceEntry> Grid::tab_cell_face(int icell) const{
 	if (_cache.tab_cell_face.empty()){
 		auto& tab = _cache.tab_cell_face;
 		tab.resize(n_cells());
 
 		for (int iface=0; iface<n_faces(); ++iface){
-			const face_cell_entry_t& fc = _tab_face_cell[iface];
+			const FaceCellEntry& fc = _tab_face_cell[iface];
 			if (fc.left_cell >= 0){
-				cell_face_entry_t e;
+				CellFaceEntry e;
 				e.face_index = iface;
 				e.normal_direction = 1;
 				tab[fc.left_cell].push_back(e);
 			}
 			if (fc.right_cell >= 0){
-				cell_face_entry_t e;
+				CellFaceEntry e;
 				e.face_index = iface;
 				e.normal_direction = -1;
 				tab[fc.right_cell].push_back(e);

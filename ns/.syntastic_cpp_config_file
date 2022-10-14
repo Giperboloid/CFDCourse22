@@ -1,4 +1,4 @@
--I src
+-I lib
 -Wall
 -Wno-unknown-pragmas
 -std=c++17

@@ -40,17 +40,17 @@ public:
 	std::vector<int> tab_face_point(int iface) const;
 	std::vector<int> tab_point_face(int iface) const;
 
-	struct cell_face_entry_t{
+	struct CellFaceEntry{
 		int face_index;
 		int normal_direction;
 	};
-	std::vector<cell_face_entry_t> tab_cell_face(int icell) const;
+	std::vector<CellFaceEntry> tab_cell_face(int icell) const;
 
-	struct face_cell_entry_t{
+	struct FaceCellEntry{
 		int right_cell = -1;
 		int left_cell = -1;
 	};
-	face_cell_entry_t tab_face_cell(int iface) const;
+	FaceCellEntry tab_face_cell(int iface) const;
 
 	// === savers
 	std::string vtk_outgrid() const;
@@ -59,7 +59,7 @@ public:
 	void save_vtk_faces(std::string outfile) const;
 private:
 	struct Cache{
-		std::vector<std::vector<cell_face_entry_t>> tab_cell_face;
+		std::vector<std::vector<CellFaceEntry>> tab_cell_face;
 		std::vector<std::vector<int>> tab_point_cell;
 		std::vector<std::vector<int>> tab_point_face;
 	};
@@ -71,7 +71,7 @@ private:
 	std::vector<Point> _points;
 	std::vector<std::vector<int>> _cells;
 	std::vector<std::vector<int>> _faces;
-	std::vector<face_cell_entry_t> _tab_face_cell;
+	std::vector<FaceCellEntry> _tab_face_cell;
 
 	std::map<int, GridBoundary> _boundaries;
 

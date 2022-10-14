@@ -3,7 +3,7 @@
 #include "grid/grid.hpp"
 #include "grid/grid_builder.hpp"
 
-bool equal_cell_face(const std::vector<Grid::cell_face_entry_t>& cf,
+bool equal_cell_face(const std::vector<Grid::CellFaceEntry>& cf,
 		const std::vector<int>& faces,
 		const std::vector<int>& directs){
 	
@@ -26,7 +26,7 @@ bool equal_cell_face(const std::vector<Grid::cell_face_entry_t>& cf,
 	return true;
 }
 
-bool equal_face_cell(const Grid::face_cell_entry_t& fc, int left, int right){
+bool equal_face_cell(const Grid::FaceCellEntry& fc, int left, int right){
 	return fc.left_cell == left && fc.right_cell == right;
 }
 
