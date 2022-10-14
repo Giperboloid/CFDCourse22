@@ -36,9 +36,9 @@ public:
 	
 	// === connectivities
 	std::vector<int> tab_cell_point(int icell) const;
-	std::vector<int> tab_point_cell(int icell) const;
+	std::vector<int> tab_point_cell(int ipoint) const;
 	std::vector<int> tab_face_point(int iface) const;
-	std::vector<int> tab_point_face(int iface) const;
+	std::vector<int> tab_point_face(int ipoint) const;
 
 	struct CellFaceEntry{
 		int face_index;

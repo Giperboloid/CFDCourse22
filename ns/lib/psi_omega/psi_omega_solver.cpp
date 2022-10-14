@@ -18,9 +18,9 @@ void APsiOmegaSolver::set_initial_condition_zero(){
 	std::fill(_omega.begin(), _omega.end(), 0.0);
 }
 
-const std::vector<double>& APsiOmegaSolver::get_psi() const{
+const std::vector<double>& APsiOmegaSolver::psi() const{
 	return _psi;
 }
-const std::vector<double>& APsiOmegaSolver::get_omega() const{
+const std::vector<double>& APsiOmegaSolver::omega() const{
 	return _omega;
 }

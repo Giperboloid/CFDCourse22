@@ -23,8 +23,8 @@ public:
 	template<typename T>
 	std::map<int, const T*> boundary_condition_by_class() const;
 
-	const std::vector<double>& get_psi() const;
-	const std::vector<double>& get_omega() const;
+	const std::vector<double>& psi() const;
+	const std::vector<double>& omega() const;
 protected:
 	double _re = 0;
 	std::vector<double> _psi, _omega;

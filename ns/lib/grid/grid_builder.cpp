@@ -193,6 +193,11 @@ struct VtkFace{
 	static constexpr int MAX_FACE_LEN = 6;
 
 	VtkFace(const std::vector<int>& vpoints, bool& was_reverted){
+		if (vpoints.size() > MAX_FACE_LEN){
+			throw std::runtime_error("Faces with more than " 
+			                         + std::to_string(MAX_FACE_LEN) 
+			                         + " are not supported");
+		}
 		was_reverted = false;
 		points_size = vpoints.size();
 		std::copy(vpoints.begin(), vpoints.end(), points.begin());

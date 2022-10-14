@@ -35,8 +35,8 @@ int main(){
 	slv.add_monitor(console_monitor);
 	// saves psi and omega to vtk with dt = 1.0
 	auto data_saver = std::make_shared<VtkFieldTimeSaver>(1, "psi_omega", linear_fem.get());
-	data_saver->add_fun("psi", std::bind(&APsiOmegaSolver::get_psi, &slv));
-	data_saver->add_fun("omega", std::bind(&APsiOmegaSolver::get_omega, &slv));
+	data_saver->add_fun("psi", std::bind(&APsiOmegaSolver::psi, &slv));
+	data_saver->add_fun("omega", std::bind(&APsiOmegaSolver::omega, &slv));
 	slv.add_monitor(data_saver);
 
 	// === solve for t=10
