@@ -1,5 +1,5 @@
 #include "common.hpp"
-#include "checks.hpp"
+#include "prog_common.hpp"
 #include "grid/grid.hpp"
 #include "grid/grid_builder.hpp"
 
@@ -33,7 +33,8 @@ bool equal_face_cell(const Grid::FaceCellEntry& fc, int left, int right){
 
 void check_gmshvtk_2d(){
 	// grid
-	std::shared_ptr<Grid> grid = GridBuilder::build_from_gmshvtk(from_input_path("rect1.vtk"));
+	std::string grid_filename = from_input_path("rect1.vtk");
+	std::shared_ptr<Grid> grid = GridBuilder::build_from_gmshvtk(grid_filename);
 
 	// check sizes
 	CHECK(grid->dim == 2);
@@ -83,9 +84,15 @@ void check_gmshvtk_2d(){
 	CHECK(grid2->n_points() == 655);
 	CHECK(grid2->n_cells() == 1156);
 	CHECK(grid2->n_faces() == 1810);
-	CHECK(equal_int_vec(grid2->btypes(), {}));
+	CHECK(grid2->btypes().empty());
 }
 
 int main(){
-	check_gmshvtk_2d();
+	try{
+		check_gmshvtk_2d();
+
+		std::cout << "DONE" << std::endl;
+	} catch (std::exception& e){
+		std::cout << "ERROR: " << "  " << e.what() << std::endl;
+	}
 }

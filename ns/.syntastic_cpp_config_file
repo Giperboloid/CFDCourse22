@@ -1,4 +1,6 @@
 -I lib
 -Wall
 -Wno-unknown-pragmas
+-DCFDLIB_OUTPUT_DIR_PATH=""
+-DCFDLIB_INPUT_DIR_PATH=""
 -std=c++17

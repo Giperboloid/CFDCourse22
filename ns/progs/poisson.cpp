@@ -1,13 +1,14 @@
 #include <iostream>
 #include "common.hpp"
-#include "checks.hpp"
+#include "prog_common.hpp"
 #include "prob/poisson_solver.hpp"
 #include "grid/grid_builder.hpp"
 #include "appr/linear_fem_approximator.hpp"
 
 void linear_fem2(){
 	// grid
-	std::shared_ptr<Grid> grid = GridBuilder::build_from_gmshvtk(from_input_path("rect1.vtk"));
+	std::string grid_filename = from_input_path("rect1.vtk");
+	std::shared_ptr<Grid> grid = GridBuilder::build_from_gmshvtk(grid_filename);
 
 	// spatial approximator
 	std::shared_ptr<LinearFemApproximator> linear_fem = LinearFemApproximator::build(grid);
@@ -37,6 +38,11 @@ void linear_fem2(){
 }
 
 int main(){
-	linear_fem2();
-	std::cout << "DONE" << std::endl;
+	try{
+		linear_fem2();
+
+		std::cout << "DONE" << std::endl;
+	} catch (std::exception& e){
+		std::cout << "ERROR: " << " " << e.what() << std::endl;
+	}
 }

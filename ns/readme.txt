@@ -3,6 +3,7 @@
 
 1.1 Windows, VisualStudio
 -------------------------
+Проверено на Windows 10, Visual Studio 2019
 
 - Cкачать amgcl
 https://github.com/ddemidov/amgcl/archive/refs/tags/1.4.2.zip
@@ -18,18 +19,25 @@ https://github.com/Kitware/CMake/releases/download/v3.24.2/cmake-3.24.2-windows-
 amgcl-1.4.2\*      {внутри неё должна быть в том числе папка amgcl\} 
 boost_1_78_0\*     {внутри неё должна быть в том числе папка boost\}
 
-- в файле winbuild64.bat подставить пути к этим папкам в соответствующие строчки. Например
+- cоздать папку build в корне проекта (папка ns/ репозитория)
+
+- скопировать скрипт winbuild64.bat в папку build. Далее вносить изменения
+  только в скопированном файле.
+
+- скрипт написан для версии Visual Studio 2019. Если используется другая версия,
+  изменить в скрипте значения переменных CMGenerator и CMToolset на соответствующие вашей версии.
+
+- в скрипте winbuild64.bat подставить пути к распакованным папкам в соответствующие строчки.
+  Например
 
 SET CMBOOST_ROOT="c:/lib/boost_1_78_0"
 SET CMBAMGCL_ROOT="c:/lib/amgcl-1.4.2"
 
-- cоздать папку build
-
-- скопировать скрипт winbuild64.bat в папку build
-
 - запустить скрипт winbuild64.bat из папки build
 
-- После сборки в папке build/bin появятся исполняемые файлы
+- После сборки в папке build появится проект VisualStudio.
+  Сборка бинарных файлов будет осуществлятся в папку build/bin.
+  Выходные файлы при использовании функции from_output_path будут писаться в build/output
 
 1.2 Linux, GCC
 --------------

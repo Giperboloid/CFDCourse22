@@ -23,12 +23,4 @@
 		throw std::runtime_error("not implemented"); \
 	}
 
-inline std::string from_input_path(std::string fname) {
-	return INPUT_DIR_PATH + fname;
-}
-
-inline std::string from_output_path(std::string fname) {
-	return OUTPUT_DIR_PATH + fname;
-}
-
 #endif

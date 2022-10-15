@@ -1,13 +1,15 @@
 #include <iostream>
 #include "common.hpp"
+#include "prog_common.hpp"
 #include "geom.hpp"
 #include "grid/grid_builder.hpp"
 #include "psi_omega/psi_omega_semi_imp_vc.hpp"
 #include "appr/linear_fem_approximator.hpp"
 
-int main(){
+void semi_imp_vc(){
 	// === grid
-	std::shared_ptr<Grid> grid = GridBuilder::build_from_gmshvtk(from_input_path("rect1.vtk"));
+	std::string grid_filename = from_input_path("rect1.vtk");
+	std::shared_ptr<Grid> grid = GridBuilder::build_from_gmshvtk(grid_filename);
 
 	// === spatial approximator
 	std::shared_ptr<LinearFemApproximator> linear_fem = LinearFemApproximator::build(grid);
@@ -41,6 +43,14 @@ int main(){
 
 	// === solve for t=10
 	slv.solve(10);
+}
 
-	std::cout << "DONE" << std::endl;
+int main(){
+	try{
+		semi_imp_vc();
+
+		std::cout << "DONE" << std::endl;
+	} catch (std::exception& e){
+		std::cout << "ERROR: " << " " << e.what() << std::endl;
+	}
 }
