@@ -83,10 +83,6 @@ std::vector<double> AFemApproximator::_build_mass() const{
 	}
 	return ret;
 }
-std::vector<double> AFemApproximator::_build_lumped_mass() const{
-	_THROW_NOT_IMP_;
-}
-
 std::vector<Point> AFemApproximator::element_centered_gradient(const std::vector<double>& fun) const{
 	std::vector<Point> ret;
 	for (auto el: _elements){

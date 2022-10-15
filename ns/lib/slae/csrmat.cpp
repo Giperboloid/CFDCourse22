@@ -54,6 +54,32 @@ void CsrStencil::set_unit_diagonal(int irow, std::vector<double>& mat) const{
 	}
 }
 
+CsrStencil CsrStencil::build(const std::vector<std::set<int>>& stencil_set){
+	std::vector<int> addr, cols;
+	addr.push_back(0);
+
+	for (int irow=0; irow<(int)stencil_set.size(); ++irow){
+		auto& s = stencil_set[irow];
+		bool has_diag = false;
+		cols.push_back(irow);
+		for (int jcol: s){
+			if (jcol == irow){
+				has_diag = true;
+			} else {
+				cols.push_back(jcol);
+			}
+		}
+		addr.push_back(addr.back() + s.size());
+		if (!has_diag){
+			addr.back() += 1;
+		}
+
+	}
+
+	CsrStencil ret;
+	ret.set_data(std::move(addr), std::move(cols));
+	return ret;
+}
 
 void CsrMatrix::matvec(const std::vector<double>& vec, std::vector<double>& ret) const{
 	CsrStencil::matvec(_vals, vec, ret);

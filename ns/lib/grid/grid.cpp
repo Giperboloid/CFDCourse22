@@ -145,7 +145,7 @@ void Grid::save_vtk_faces(std::string outfile) const{
 		if (is_boundary_face(iface)) bt[iface] = 0;
 	}
 	for (auto& bit: _boundaries){
-		for (int iface: bit.second.tab_faces()){
+		for (int iface: bit.second.face_indices()){
 			bt[iface] = bit.first;
 		}
 	}

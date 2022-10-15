@@ -65,10 +65,10 @@ void check_gmshvtk_2d(){
 	// check boundary
 	CHECK(equal_int_vec_anyorder(grid->btypes(), {1, 2, 3, 4}));
 	auto b1 = grid->boundary(1);
-	auto tf = b1.tab_faces();
+	auto tf = b1.face_indices();
 	CHECK(b1.n_faces() == 8);
 	CHECK(equal_int_vec_anyorder(tf, {1, 451, 448, 445, 442, 439, 436, 10}));
-	CHECK(equal_int_vec_anyorder(b1.tab_points(), {3, 145, 146, 147, 148, 149, 150, 151, 0}));
+	CHECK(equal_int_vec_anyorder(b1.point_indices(), {3, 145, 146, 147, 148, 149, 150, 151, 0}));
 	int f1 = std::find(tf.begin(), tf.end(), 1) - tf.begin();
 	CHECK(equal_int_vec(b1.tab_face_point_positive(f1), {151, 0}));
 	int f442 = std::find(tf.begin(), tf.end(), 442) - tf.begin();

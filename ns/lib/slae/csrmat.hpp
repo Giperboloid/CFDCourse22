@@ -27,6 +27,10 @@ public:
 	double matvec_irow(int irow, const std::vector<double>& mat, const std::vector<double>& vec) const;
 	// sets diagonal value of the specified row to 1, nondiagonal to 0
 	void set_unit_diagonal(int irow, std::vector<double>& mat) const;
+	
+	// build from vector of sets
+	// i-th entry of vector -- column indices in the i-th row
+	static CsrStencil build(const std::vector<std::set<int>>& stencil_set);
 private:
 	std::vector<int> _addr = {0};
 	std::vector<int> _cols;

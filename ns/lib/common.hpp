@@ -10,6 +10,7 @@
 #include <array>
 #include <functional>
 #include <string>
+#include <cmath>
 
 #if !defined(__PRETTY_FUNCTION__) && !defined(__GNUC__)
 #define __PRETTY_FUNCTION__ __FUNCSIG__

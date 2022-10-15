@@ -45,7 +45,6 @@ protected:
 
 	std::vector<double> _build_stiff() const override;
 	std::vector<double> _build_mass() const override;
-	std::vector<double> _build_lumped_mass() const override;
 	CsrStencil _build_stencil() const override;
 	
 

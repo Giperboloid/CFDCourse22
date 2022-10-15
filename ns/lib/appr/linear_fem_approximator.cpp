@@ -56,13 +56,13 @@ std::shared_ptr<AFaceElement> LinearFemApproximator::_build_boundary_element(
 
 void LinearFemApproximator::apply_bc_dirichlet_to_stiff_mat(int bnd, std::vector<double>& stiff) const{
 	auto s = stencil();
-	for (int ivert: _grid->boundary(bnd).tab_points()){
+	for (int ivert: _grid->boundary(bnd).point_indices()){
 		s.set_unit_diagonal(ivert, stiff);
 	}
 }
 
 void LinearFemApproximator::apply_bc_dirichlet_to_stiff_vec(int bnd, std::function<double(Point)> func, std::vector<double>& vec) const{
-	for (int ivert: _grid->boundary(bnd).tab_points()){
+	for (int ivert: _grid->boundary(bnd).point_indices()){
 		vec[ivert] = func(_grid->point(ivert));
 	}
 }

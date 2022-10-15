@@ -16,6 +16,8 @@ set(SRC
 	appr/fe_linear_triangle.cpp
 	appr/fe_linear_quadrangle.cpp
 	appr/linear_fem_approximator.cpp
+	appr/fvm_approximator.cpp
+	appr/fvolume.cpp
 )
 
 set(HEADERS 
@@ -39,6 +41,8 @@ set(HEADERS
 	appr/fe_linear_triangle.hpp
 	appr/fe_linear_quadrangle.hpp
 	appr/linear_fem_approximator.hpp
+	appr/fvm_approximator.hpp
+	appr/fvolume.hpp
 )
 
 add_library(${CFDLIB_TARGET} STATIC ${SRC} ${HEADERS})

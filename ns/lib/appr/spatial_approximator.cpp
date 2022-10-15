@@ -24,13 +24,6 @@ const std::vector<double>& ASpatialApproximator::mass() const{
 	}
 	return _cache.mass;
 }
-const std::vector<double>& ASpatialApproximator::lumped_mass() const{
-	if (_cache.lumped_mass.size() == 0){
-		_cache.lumped_mass = _build_lumped_mass();
-	}
-	return _cache.lumped_mass;
-}
-
 std::string ASpatialApproximator::_vtk_outgrid() const{
 	return _grid->vtk_outgrid();
 }

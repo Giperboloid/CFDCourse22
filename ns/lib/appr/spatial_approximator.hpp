@@ -22,7 +22,6 @@ public:
 	// =============== approximated differential operators
 	const std::vector<double>& stiff() const;
 	const std::vector<double>& mass() const;
-	const std::vector<double>& lumped_mass() const;
 
 	// =============== boundary conditions
 	virtual void apply_bc_dirichlet_to_stiff_mat(int bnd, std::vector<double>& stiff) const = 0;
@@ -36,7 +35,6 @@ public:
 protected:
 	virtual std::vector<double> _build_stiff() const = 0;
 	virtual std::vector<double> _build_mass() const = 0;
-	virtual std::vector<double> _build_lumped_mass() const = 0;
 	virtual CsrStencil _build_stencil() const = 0;
 
 	ASpatialApproximator(std::shared_ptr<Grid> grid);
@@ -46,7 +44,6 @@ private:
 	struct Cache{
 		std::vector<double> stiff;
 		std::vector<double> mass;
-		std::vector<double> lumped_mass;
 		CsrStencil stencil;
 		std::string vtk_outgrid;
 	};
