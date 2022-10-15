@@ -4,6 +4,7 @@
 #include "common.hpp"
 #include "slae/csrmat.hpp"
 
+// solve SLAE using amgc method
 class AmgcMatrixSolver{
 public:
 	AmgcMatrixSolver(int maxit=1000, double eps=1e-8);

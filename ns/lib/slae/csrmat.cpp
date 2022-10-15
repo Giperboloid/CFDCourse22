@@ -13,7 +13,7 @@ int CsrStencil::n_rows() const{
 	return (int)_addr.size() - 1;
 }
 
-int CsrStencil::addr_index(int irow, int jcol) const{
+int CsrStencil::vals_index(int irow, int jcol) const{
 	for (int a=_addr[irow]; a<_addr[irow+1]; ++a){
 		if (_cols[a] == jcol){
 			return a;
