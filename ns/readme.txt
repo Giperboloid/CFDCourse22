@@ -31,7 +31,7 @@ boost_1_78_0\*     {внутри неё должна быть в том числ
   Например
 
 SET CMBOOST_ROOT="c:/lib/boost_1_78_0"
-SET CMBAMGCL_ROOT="c:/lib/amgcl-1.4.2"
+SET CMAMGCL_ROOT="c:/lib/amgcl-1.4.2"
 
 - запустить скрипт winbuild64.bat из папки build
 
