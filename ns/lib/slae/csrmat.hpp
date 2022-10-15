@@ -16,7 +16,7 @@ public:
 
 	// returns index of [irow, jcol] entry in values vector
 	// throws if there is no such entry
-	int vals_index(int irow, int jcol) const;
+	int addr_index(int irow, int jcol) const;
 
 	// ret = mat * vec
 	// mat - values vector of the sparse matrix

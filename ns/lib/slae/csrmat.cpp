@@ -13,7 +13,7 @@ int CsrStencil::n_rows() const{
 	return (int)_addr.size() - 1;
 }
 
-int CsrStencil::vals_index(int irow, int jcol) const{
+int CsrStencil::addr_index(int irow, int jcol) const{
 	for (int a=_addr[irow]; a<_addr[irow+1]; ++a){
 		if (_cols[a] == jcol){
 			return a;
@@ -58,13 +58,14 @@ void CsrStencil::set_unit_diagonal(int irow, std::vector<double>& mat) const{
 void CsrMatrix::matvec(const std::vector<double>& vec, std::vector<double>& ret) const{
 	CsrStencil::matvec(_vals, vec, ret);
 }
+
 double CsrMatrix::matvec_irow(int irow, const std::vector<double>& vec) const{
 	return CsrStencil::matvec_irow(irow, _vals, vec);
 }
+
 void CsrMatrix::matvec_plus(double coeff, const std::vector<double>& vec, std::vector<double>& ret) const{
 	CsrStencil::matvec_plus(coeff, _vals, vec, ret);
 }
-
 
 void CsrMatrix::set_unit_diagonal(int irow){
 	CsrStencil::set_unit_diagonal(irow, _vals);

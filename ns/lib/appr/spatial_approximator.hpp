@@ -13,10 +13,13 @@ public:
 	virtual int n_bases() const = 0;
 
 	// =============== approximate function
+	// approximates analytic function
 	virtual std::vector<double> approximate(std::function<double(Point)> func) const = 0;
 
-	// =============== approximated differential operators
+	// =============== stiff matrix stencil
 	const CsrStencil& stencil() const;
+
+	// =============== approximated differential operators
 	const std::vector<double>& stiff() const;
 	const std::vector<double>& mass() const;
 	const std::vector<double>& lumped_mass() const;

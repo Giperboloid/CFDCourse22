@@ -1,3 +1,7 @@
+# ============= sandbox
+add_executable(sandbox sandbox.cpp)
+target_link_libraries(sandbox PUBLIC ${CFDLIB_TARGET})
+
 # ============= grids_test
 add_executable(grids_test grids_test.cpp)
 target_link_libraries(grids_test PUBLIC ${CFDLIB_TARGET})

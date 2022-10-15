@@ -17,7 +17,7 @@ public:
 
 	// == assembly procedures
 	// global basis indices of the element local basis functions
-	const std::vector<int> global_connect() const { return _connect; }
+	const std::vector<int>& global_connect() const { return _connect; }
 	// add dense local matrix to the global sparse fem matrix
 	void add_to_global_mat(const std::vector<double>& lmat,
 	                       std::vector<double>& mat_values);
@@ -34,9 +34,9 @@ private:
 // Internal finite element
 class AInternalElement: public AElement{
 public:
-	AInternalElement(const std::vector<int>& vert_indices): AElement(vert_indices){};
+	AInternalElement(const std::vector<int>& basis_indices): AElement(basis_indices){};
 
-	// === local matrix assembly
+	// === local matrices
 	// [i, j] = grad(p_i) @ grad(p_j)
 	virtual std::vector<double> stiff() const;
 	// [i, j] = p_i*p_j
@@ -55,7 +55,7 @@ public:
 // Face finite element
 class AFaceElement: public AElement{
 public:
-	AFaceElement(const std::vector<int>& vert_indices): AElement(vert_indices){};
+	AFaceElement(const std::vector<int>& basis_indices): AElement(basis_indices){};
 };
 
 // Lagrangian internal finite element
