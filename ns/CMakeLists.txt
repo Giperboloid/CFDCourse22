@@ -15,5 +15,15 @@ include_directories(${AMGCL_ROOT})
 
 set(CFDLIB_TARGET cfdlib)
 
+add_definitions(-DINPUT_DIR_PATH="${CMAKE_SOURCE_DIR}/grids/")
+
+if (WIN32)
+	set(OUTPUT_DIR_PATH ${CMAKE_BINARY_DIR}/output/)
+	add_definitions(-DOUTPUT_DIR_PATH="${OUTPUT_DIR_PATH}")
+	file(MAKE_DIRECTORY ${OUTPUT_DIR_PATH})
+else(WIN32)
+	add_definitions(-DOUTPUT_DIR_PATH="")
+endif(WIN32)
+
 add_subdirectory(lib)
 add_subdirectory(progs)

@@ -7,7 +7,7 @@
 
 void linear_fem2(){
 	// grid
-	std::shared_ptr<Grid> grid = GridBuilder::build_from_gmshvtk("../../grids/rect1.vtk");
+	std::shared_ptr<Grid> grid = GridBuilder::build_from_gmshvtk(from_input_path("rect1.vtk"));
 
 	// spatial approximator
 	std::shared_ptr<LinearFemApproximator> linear_fem = LinearFemApproximator::build(grid);
@@ -28,7 +28,7 @@ void linear_fem2(){
 	slv.solve(rhs, x);
 
 	// show solution
-	linear_fem->vtk_save_scalar("u.vtk", x);
+	linear_fem->vtk_save_scalar(from_output_path("u.vtk"), x);
 
 	// check solution
 	CHECK_FLOAT3(x[150], 0);

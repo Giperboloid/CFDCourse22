@@ -14,7 +14,7 @@ REM root boost library
 SET CMBOOST_ROOT="c:/libs/boost_1_78_0"
 
 REM root amgc library
-SET CMBAMGCL_ROOT="c:/libs/amgcl-1.4.2"
+SET CMAMGCL_ROOT="c:/libs/amgcl-1.4.2"
 
 cmake -G %CMGenerator% -T %CMToolset% -A %CMArch% ..^
 	-DBOOST_ROOT=%CMBOOST_ROOT% ^

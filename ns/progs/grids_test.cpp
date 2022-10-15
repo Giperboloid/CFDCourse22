@@ -33,7 +33,7 @@ bool equal_face_cell(const Grid::FaceCellEntry& fc, int left, int right){
 
 void check_gmshvtk_2d(){
 	// grid
-	std::shared_ptr<Grid> grid = GridBuilder::build_from_gmshvtk("../../grids/rect1.vtk");
+	std::shared_ptr<Grid> grid = GridBuilder::build_from_gmshvtk(from_input_path("rect1.vtk"));
 
 	// check sizes
 	CHECK(grid->dim == 2);
@@ -74,11 +74,11 @@ void check_gmshvtk_2d(){
 	CHECK(equal_int_vec(b1.tab_face_point_positive(f442), {147, 148}));
 
 	// save_vtk
-	grid->save_vtk("g.vtk");
-	grid->save_vtk_faces("g_faces.vtk");
+	grid->save_vtk(from_output_path("g.vtk"));
+	grid->save_vtk_faces(from_output_path("g_faces.vtk"));
 	
 	// read from saved
-	std::shared_ptr<Grid> grid2 = GridBuilder::build_from_gmshvtk("g.vtk");
+	std::shared_ptr<Grid> grid2 = GridBuilder::build_from_gmshvtk(from_output_path("g.vtk"));
 	CHECK(grid2->dim == 2);
 	CHECK(grid2->n_points() == 655);
 	CHECK(grid2->n_cells() == 1156);

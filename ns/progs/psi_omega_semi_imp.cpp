@@ -7,7 +7,7 @@
 
 int main(){
 	// === grid
-	std::shared_ptr<Grid> grid = GridBuilder::build_from_gmshvtk("../../grids/rect1.vtk");
+	std::shared_ptr<Grid> grid = GridBuilder::build_from_gmshvtk(from_input_path("rect1.vtk"));
 
 	// === spatial approximator
 	std::shared_ptr<LinearFemApproximator> linear_fem = LinearFemApproximator::build(grid);
@@ -34,7 +34,7 @@ int main(){
 	auto console_monitor = std::make_shared<ConsoleIterReport>(20);
 	slv.add_monitor(console_monitor);
 	// saves psi and omega to vtk with dt = 1.0
-	auto data_saver = std::make_shared<VtkFieldTimeSaver>(1, "psi_omega", linear_fem.get());
+	auto data_saver = std::make_shared<VtkFieldTimeSaver>(1, from_output_path("psi_omega"), linear_fem.get());
 	data_saver->add_fun("psi", std::bind(&APsiOmegaSolver::psi, &slv));
 	data_saver->add_fun("omega", std::bind(&APsiOmegaSolver::omega, &slv));
 	slv.add_monitor(data_saver);
