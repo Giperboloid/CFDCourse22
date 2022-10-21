@@ -24,9 +24,19 @@ public:
 	// add local vector to the global fem vector
 	void add_to_global_vec(const std::vector<double>& lvec,
 	                       std::vector<double>& vec);
+	void clear_cache() const noexcept;
 protected:
 	std::vector<int> _stencil_addr;
 	std::vector<int> _connect;
+	mutable struct Cache {
+		std::vector<double> grad_x;
+		std::vector<double> grad_y;
+		std::vector<double> grad_z;
+
+		bool is_grad_x{false};
+		bool is_grad_y{false};
+		bool is_grad_z{false};
+	} _cache;
 private:
 	void _initialize_stencil_addresses(const CsrStencil& M);
 };
@@ -42,11 +52,13 @@ public:
 	// [i, j] = p_i*p_j
 	virtual std::vector<double> mass() const;
 	// [i, j] = dp_j/dx * p_i
-	virtual std::vector<double> grad_x() const;
+	virtual const std::vector<double>& grad_x() const;
 	// [i, j] = dp_j/dy * p_i
-	virtual std::vector<double> grad_y() const;
+	virtual const std::vector<double>& grad_y() const;
 	// [i, j] = dp_j/dz * p_i
-	virtual std::vector<double> grad_z() const;
+	virtual const std::vector<double>& grad_z() const;
+
+	// clear cached data
 
 	// [df/dx, df/dy, df/dz] at the element center
 	virtual Point element_centered_gradient(const std::vector<double>& fun) const;

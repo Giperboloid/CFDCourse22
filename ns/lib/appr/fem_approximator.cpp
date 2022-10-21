@@ -100,6 +100,7 @@ std::vector<double> AFemApproximator::transport_v_elem(
 		const std::vector<double>& vy,
 		const std::vector<double>& vz) const {
 	std::vector<double> ret(stencil().n_nonzero(), 0);
+
 	bool need_x = !vx.empty();
 	bool need_y = !vy.empty();
 	bool need_z = !vz.empty();
@@ -121,7 +122,9 @@ std::vector<double> AFemApproximator::transport_v_elem(
 			if (need_z) ret[addr] -= vz[ielem] * grad_z[k];
 			++k;
 		}
+		elem.clear_cache();
 	}
+
 	return ret;
 }
 

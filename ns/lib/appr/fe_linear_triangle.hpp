@@ -13,14 +13,13 @@ public:
 
 	std::vector<double> stiff() const override;
 	std::vector<double> mass() const override;
-	std::vector<double> grad_x() const override;
-	std::vector<double> grad_y() const override;
-	std::vector<double> grad_z() const override;
+	const std::vector<double>& grad_x() const override;
+	const std::vector<double>& grad_y() const override;
+	const std::vector<double>& grad_z() const override;
 
 	Point element_centered_gradient(const std::vector<double>& fun) const override;
 private:
 	double _modj, _j21, _j22, _j11, _j12;
 };
-
 
 #endif

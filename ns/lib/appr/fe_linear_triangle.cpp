@@ -46,28 +46,39 @@ Point FeLinearTriangle::element_centered_gradient(const std::vector<double>& fun
 	return {x, y, 0};
 }
 
-std::vector<double> FeLinearTriangle::grad_x() const{
-	std::vector<double> ret(9);
+const std::vector<double>& FeLinearTriangle::grad_x() const{
+	if (_cache.is_grad_x) {
+		return _cache.grad_x;
+	}
+	_cache.grad_x.resize(9);
 	double dx[3]={-_j22 + _j21, _j22, -_j21};
 
 	int k=0;
 	for (int i=0; i<3; ++i)
-	for (int j=0; j<3; ++j) ret[k++] = dx[j] / 6.0;
+	for (int j=0; j<3; ++j) _cache.grad_x[k++] = dx[j] / 6.0;
 
-	return ret;
+	_cache.is_grad_x = true;
+
+	return _cache.grad_x;
 }
 
-std::vector<double> FeLinearTriangle::grad_y() const{
-	std::vector<double> ret(9);
+const std::vector<double>& FeLinearTriangle::grad_y() const{
+	if (_cache.is_grad_y) {
+		return _cache.grad_y;
+	}
+	_cache.grad_y.resize(9);
 	double dx[3]={_j12 - _j11, -_j12, _j11};
 
 	int k=0;
 	for (int i=0; i<3; ++i)
-	for (int j=0; j<3; ++j) ret[k++] = dx[j] / 6.0;
+	for (int j=0; j<3; ++j) _cache.grad_y[k++] = dx[j] / 6.0;
 
-	return ret;
+	_cache.is_grad_y = true;
+
+	return _cache.grad_y;
 }
 
-std::vector<double> FeLinearTriangle::grad_z() const{
-	return {0, 0, 0, 0, 0, 0, 0, 0, 0};
+const std::vector<double>& FeLinearTriangle::grad_z() const{
+	_cache.grad_z.resize(9);
+	return _cache.grad_z;
 }

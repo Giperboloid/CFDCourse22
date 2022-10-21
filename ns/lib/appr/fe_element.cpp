@@ -23,6 +23,16 @@ void AElement::add_to_global_vec(const std::vector<double>& lvec,
 	}
 }
 
+void AElement::clear_cache() const noexcept {
+	_cache.is_grad_x = false;
+	_cache.is_grad_y = false;
+	_cache.is_grad_z = false;
+
+	_cache.grad_x.clear();
+	_cache.grad_y.clear();
+	_cache.grad_z.clear();
+}
+
 std::vector<double> AInternalElement::stiff() const{
 	_THROW_NOT_IMP_;
 }
@@ -31,15 +41,15 @@ std::vector<double> AInternalElement::mass() const{
 	_THROW_NOT_IMP_;
 }
 
-std::vector<double> AInternalElement::grad_x() const{
+const std::vector<double>& AInternalElement::grad_x() const{
 	_THROW_NOT_IMP_;
 }
 
-std::vector<double> AInternalElement::grad_y() const{
+const std::vector<double>& AInternalElement::grad_y() const{
 	_THROW_NOT_IMP_;
 }
 
-std::vector<double> AInternalElement::grad_z() const{
+const std::vector<double>& AInternalElement::grad_z() const{
 	_THROW_NOT_IMP_;
 }
 
