@@ -19,15 +19,15 @@ set(CFDLIB_TARGET cfdlib)
 add_definitions(-DCFDLIB_INPUT_DIR_PATH="${CMAKE_SOURCE_DIR}/input_data/")
 
 # default output directory
-if (MSVS)
+if (MSVC)
 	# build/output for visual studio
 	set(OUTPUT_DIR_PATH ${CMAKE_BINARY_DIR}/output/)
 	add_definitions(-DCFDLIB_OUTPUT_DIR_PATH="${OUTPUT_DIR_PATH}")
 	file(MAKE_DIRECTORY ${OUTPUT_DIR_PATH})
-else(MSVS)
+else(MSVC)
 	# ./ for linux
 	add_definitions(-DCFDLIB_OUTPUT_DIR_PATH="")
-endif(MSVS)
+endif(MSVC)
 
 add_subdirectory(lib)
 add_subdirectory(progs)
