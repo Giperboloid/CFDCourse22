@@ -24,8 +24,29 @@ public:
 	const std::vector<double>& mass() const;
 
 	// =============== boundary conditions
-	virtual void apply_bc_dirichlet_to_stiff_mat(int bnd, std::vector<double>& stiff) const = 0;
-	virtual void apply_bc_dirichlet_to_stiff_vec(int bnd, std::function<double(Point)> func, std::vector<double>& vec) const = 0;
+	// get boundary basis indices with respective point coordinates
+	const std::vector<std::pair<int, Point>>& boundary_bases(int ibnd) const;
+
+	// forced dirichlet conditions
+	void apply_bc_dirichlet(
+		int ibnd,
+		std::function<double(Point)> val_func,
+		std::vector<double>& lhs, std::vector<double>& rhs) const;
+	void apply_bc_dirichlet_lhs(int ibnd, std::vector<double>& lhs) const;
+	void apply_bc_dirichlet_rhs(int ibnd, std::function<double(Point)> val_func, std::vector<double>& rhs) const;
+
+	// stiff matrix conditions
+	// du/dn = -q
+	virtual void apply_bc_neumann_to_stiff(
+		int ibnd,
+		std::function<double(Point)> q_func,
+		std::vector<double>& stiff, std::vector<double>& rhs) const;
+	// du/dn = -alpha*u + beta
+	virtual void apply_bc_robin_to_stiff(
+		int ibnd,
+		std::function<double(Point)> alpha_func,
+		std::function<double(Point)> beta_func,
+		std::vector<double>& stiff, std::vector<double>& rhs) const;
 
 	// =============== vtk data savers
 	void vtk_save_scalar(std::string fname, const std::vector<double>& x, std::string dataname="data") const;
@@ -33,21 +54,22 @@ public:
 
 	const Grid& grid() const { return *_grid; }
 protected:
-	virtual std::vector<double> _build_stiff() const = 0;
-	virtual std::vector<double> _build_mass() const = 0;
-	virtual CsrStencil _build_stencil() const = 0;
-
 	ASpatialApproximator(std::shared_ptr<Grid> grid);
-
 	std::shared_ptr<Grid> _grid;
 private:
 	struct Cache{
 		std::vector<double> stiff;
 		std::vector<double> mass;
 		CsrStencil stencil;
+		std::map<int, std::vector<std::pair<int, Point>>> boundary_bases;
 		std::string vtk_outgrid;
 	};
 	mutable Cache _cache;
+
+	virtual std::vector<double> _build_stiff() const = 0;
+	virtual std::vector<double> _build_mass() const = 0;
+	virtual CsrStencil _build_stencil() const = 0;
+	virtual std::map<int, std::vector<std::pair<int, Point>>> _build_boundary_bases() const = 0;
 
 	// vtk output details
 	virtual std::string _vtk_outgrid() const;

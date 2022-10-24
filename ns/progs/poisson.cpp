@@ -6,6 +6,37 @@
 #include "appr/linear_fem_approximator.hpp"
 #include "appr/fvm_approximator.hpp"
 
+void linear_fvm1(){
+	// grid
+	std::shared_ptr<Grid> grid = GridBuilder::build_regular1(10, 101);
+
+	// spatial approximator
+	std::shared_ptr<FvmApproximator> appr = FvmApproximator::build(grid);
+
+	// solver
+	PoissonSolver slv(appr);
+
+	// bc
+	slv.set_bc_dirichlet(1, 0);
+	slv.set_bc_dirichlet(2, 1);
+
+	// rhs
+	std::vector<double> rhs = appr->approximate([](Point p){ return 0; });
+
+	// solve
+	std::vector<double> x;
+	slv.initialize();
+	slv.solve(rhs, x);
+
+	// show solution
+	appr->vtk_save_scalar(from_output_path("poisson_fvm.vtk"), x);
+	
+	// check solution
+	CHECK_FLOAT3(x[0], 0.005);
+	CHECK_FLOAT3(x[5], 0.055);
+	CHECK_FLOAT3(x[99], 0.995);
+}
+
 void linear_fvm2(){
 	// grid
 	std::string grid_filename = from_input_path("rect1.vtk");
@@ -33,7 +64,7 @@ void linear_fvm2(){
 	appr->vtk_save_scalar(from_output_path("poisson_fvm.vtk"), x);
 
 	// check solution
-	CHECK_FLOAT3(x[819], 0.1431);
+	CHECK_FLOAT3(x[819], 0.148651);
 }
 
 void linear_fem2(){
@@ -70,6 +101,7 @@ void linear_fem2(){
 
 int main(){
 	try{
+		linear_fvm1();
 		linear_fvm2();
 		linear_fem2();
 

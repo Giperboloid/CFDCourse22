@@ -63,6 +63,8 @@ class ALagrangeInternalElement: public AInternalElement{
 public:
 	ALagrangeInternalElement(const std::vector<int>& vert_indices, const std::vector<Point>& vert_coo)
 		: AInternalElement(vert_indices), _coo(vert_coo){};
+
+	const std::vector<Point>& coo() const { return _coo; }
 protected:
 	std::vector<Point> _coo;
 };
@@ -73,6 +75,8 @@ class ALagrangeFaceElement: public AFaceElement{
 public:
 	ALagrangeFaceElement(const std::vector<int>& vert_indices, const std::vector<Point>& vert_coo)
 		: AFaceElement(vert_indices), _coo(vert_coo){};
+
+	const std::vector<Point>& coo() const { return _coo; }
 protected:
 	std::vector<Point> _coo;
 };

@@ -23,6 +23,7 @@ struct FVolume{
 	const Point center;
 
 	static FVolume build(int icell, const std::vector<Point>& coo, CellCode code);
+	static FVolume build_boundary(int icell, const std::vector<Point>& coo);
 private:
 	FVolume(int icell, double volume, Point center);
 };

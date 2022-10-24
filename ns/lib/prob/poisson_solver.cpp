@@ -1,4 +1,5 @@
 #include "prob/poisson_solver.hpp"
+#include "dbg/printer.hpp"
 
 PoissonSolver::PoissonSolver(std::shared_ptr<ASpatialApproximator> appr): _approximator(appr) {
 	_slae_solver.reset(new AmgcMatrixSolver());
@@ -18,7 +19,7 @@ void PoissonSolver::initialize(){
 	std::vector<double> stiff = _approximator->stiff();
 
 	for (auto& it: _bc_dirichlet){
-		_approximator->apply_bc_dirichlet_to_stiff_mat(it.first, stiff);
+		_approximator->apply_bc_dirichlet_lhs(it.first, stiff);
 	}
 
 	_slae_solver->set_matrix(_approximator->stencil(), stiff);
@@ -32,7 +33,7 @@ void PoissonSolver::solve(const std::vector<double>& rhs, std::vector<double>& u
 
 	// dirichlet values
 	for (auto& it: _bc_dirichlet){
-		_approximator->apply_bc_dirichlet_to_stiff_vec(it.first, it.second, _slae_rhs);
+		_approximator->apply_bc_dirichlet_rhs(it.first, it.second, _slae_rhs);
 	}
 
 	// solve

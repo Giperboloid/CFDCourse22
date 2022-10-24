@@ -431,3 +431,27 @@ std::shared_ptr<Grid> GridBuilder::build_from_gmshvtk(std::string fn){
 
 	return ret;
 }
+
+std::shared_ptr<Grid> GridBuilder::build_regular1(double len, int n_points){
+	std::shared_ptr<Grid> ret(new Grid(1));
+
+	for (int i=0; i<n_points; ++i){
+		ret->_points.push_back({i*len/(n_points-1), 0, 0});
+		ret->_faces.push_back(std::vector<int>{i});
+
+		Grid::FaceCellEntry fc; 
+		fc.left_cell = i-1;
+		fc.right_cell = (i<n_points-1) ? i : -1;
+		ret->_tab_face_cell.push_back(fc);
+	}
+
+	for (int i=0; i<n_points-1; ++i){
+		ret->_cells.push_back(std::vector<int>{i, i+1});
+		ret->_vtk_cell_codes.push_back((int)CellCode::SEGMENT);
+	}
+
+	ret->_boundaries.emplace(1, GridBoundary(ret.get(), {0}));
+	ret->_boundaries.emplace(2, GridBoundary(ret.get(), {n_points-1}));
+
+	return ret;
+}

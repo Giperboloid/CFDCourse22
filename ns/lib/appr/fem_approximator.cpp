@@ -120,18 +120,3 @@ std::vector<double> AFemApproximator::transport_v_elem(
 	}
 	return ret;
 }
-
-const std::vector<int>& AFemApproximator::boundary_bases(int btype) const{
-	if (_cache.boundary_bases.empty()){
-		for (const auto& it: _boundary_elements){
-			std::set<int> bv;
-			for (const auto& belem: it.second){
-				for (int iv: belem->global_connect()){
-					bv.insert(iv);
-				}
-			}
-			_cache.boundary_bases[it.first] = std::vector<int>(bv.begin(), bv.end());
-		}
-	}
-	return _cache.boundary_bases[btype];
-}

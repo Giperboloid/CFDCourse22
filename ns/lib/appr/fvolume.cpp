@@ -9,7 +9,9 @@ std::pair<Point, double> face_normal_area(const std::vector<Point>& coo){
 	} else if (coo.size() == 2){
 		// segment
 		Vector v = coo[1] - coo[0];
-		return { {v.y, -v.x, 0}, vector_len(v) };
+		Vector ret = {v.y, -v.x, 0};
+		double ret_len = vector_len(ret);
+		return { ret/ret_len, ret_len };
 	} else {
 		// polygon
 		Point ret;
@@ -73,4 +75,8 @@ FVolume FVolume::build(int icell, const std::vector<Point>& coo, CellCode code){
 	Point center = aver_point(coo);
 	double volume = cell_volume(coo, code);
 	return FVolume(icell, volume, center);
+}
+
+FVolume FVolume::build_boundary(int icell, const std::vector<Point>& coo){
+	return FVolume(icell, 0, aver_point(coo));
 }

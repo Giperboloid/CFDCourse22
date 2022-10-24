@@ -54,19 +54,34 @@ std::shared_ptr<AFaceElement> LinearFemApproximator::_build_boundary_element(
 	}
 }
 
-void LinearFemApproximator::apply_bc_dirichlet_to_stiff_mat(int bnd, std::vector<double>& stiff) const{
-	auto s = stencil();
-	for (int ivert: _grid->boundary(bnd).point_indices()){
-		s.set_unit_diagonal(ivert, stiff);
-	}
-}
-
-void LinearFemApproximator::apply_bc_dirichlet_to_stiff_vec(int bnd, std::function<double(Point)> func, std::vector<double>& vec) const{
-	for (int ivert: _grid->boundary(bnd).point_indices()){
-		vec[ivert] = func(_grid->point(ivert));
-	}
-}
-
 bool LinearFemApproximator::_vtk_use_cell_data() const{
 	return false;
+}
+
+std::map<int, std::vector<std::pair<int, Point>>> LinearFemApproximator::_build_boundary_bases() const{
+	std::map<int, std::vector<std::pair<int, Point>>> ret;
+
+	for (int ibnd: _grid->btypes()){
+		auto fnd = _boundary_elements.find(ibnd);
+		if (fnd == _boundary_elements.end()){
+			throw std::runtime_error("Failed to find boundary " + std::to_string(ibnd));
+		}
+		std::vector<std::pair<int, Point>> p;
+
+		for (std::shared_ptr<const AFaceElement> el: fnd->second){
+			const ALagrangeFaceElement* face = static_cast<const ALagrangeFaceElement*>(el.get());
+			const std::vector<int>& ind = face->global_connect();
+			const std::vector<Point>& pts = face->coo();
+
+			for (size_t i=0; i<ind.size(); ++i){
+				p.push_back({ind[i], pts[i]});
+			}
+		}
+
+		ret[ibnd] = p;
+	}
+
+	return ret;
+
+	return ret;
 }

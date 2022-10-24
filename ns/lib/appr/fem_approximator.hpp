@@ -17,9 +17,6 @@ public:
 	// gradient of the fem approximated function in the element centers
 	std::vector<Point> element_centered_gradient(const std::vector<double>& fun) const;
 
-	// basis indices relative to the boundary of the specified type
-	const std::vector<int>& boundary_bases(int btype) const;
-
 	// => matrix of the operator: vx*grad_x + vy*grad_y + vz*grad_z
 	// where v is given as element centered data.
 	//
@@ -41,20 +38,18 @@ protected:
 	virtual std::shared_ptr<AFaceElement> _build_boundary_element(
 		const std::vector<int>& point_indices,
 		const std::vector<Point>& points) = 0;
-
-
-	std::vector<double> _build_stiff() const override;
-	std::vector<double> _build_mass() const override;
-	CsrStencil _build_stencil() const override;
 	
 
 	std::vector<std::shared_ptr<AInternalElement>> _elements;
 	std::map<int, std::vector<std::shared_ptr<AFaceElement>>> _boundary_elements;
 private:
 	struct Cache{
-		std::map<int, std::vector<int>> boundary_bases;
 	};
 	mutable Cache _cache;
+
+	std::vector<double> _build_stiff() const override;
+	std::vector<double> _build_mass() const override;
+	CsrStencil _build_stencil() const override;
 };
 
 #endif

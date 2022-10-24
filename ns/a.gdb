@@ -1,6 +1,5 @@
-# file ./test_poisson
-file ./grids_test
+file ./poisson
 
 set breakpoint pending on
-b grids_test.cpp:17
+b poisson_solver.cpp:20
 run

@@ -39,13 +39,13 @@ public:
 		// assemble vertices where omega = -Laplas(psi)
 		std::set<int> bc_vert_set;
 		for (auto it: slv->boundary_condition_by_class<PsiOmegaBc_Wall>()){
-			for (int ivert: _approximator->boundary_bases(it.first)){
-				bc_vert_set.insert(ivert);
+			for (auto bit: _approximator->boundary_bases(it.first)){
+				bc_vert_set.insert(bit.first);
 			}
 		}
 		for (auto it: slv->boundary_condition_by_class<PsiOmegaBc_Input>()){
-			for (int ivert: _approximator->boundary_bases(it.first)){
-				bc_vert_set.insert(ivert);
+			for (auto bit: _approximator->boundary_bases(it.first)){
+				bc_vert_set.insert(bit.first);
 			}
 		}
 		_bc_vert = std::vector<int>(bc_vert_set.begin(), bc_vert_set.end());
