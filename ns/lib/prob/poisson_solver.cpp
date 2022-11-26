@@ -39,3 +39,7 @@ void PoissonSolver::solve(const std::vector<double>& rhs, std::vector<double>& u
 	// solve
 	_slae_solver->solve(_slae_rhs, u);
 }
+
+void PoissonSolver::set_solver(AMatrixSolver* solver){
+	_slae_solver.reset(solver);
+}

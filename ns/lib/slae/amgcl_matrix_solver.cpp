@@ -1,4 +1,4 @@
-#include "slae/matrix_solver.hpp"
+#include "slae/amgcl_matrix_solver.hpp"
 
 #include <amgcl/backend/builtin.hpp>
 #include <amgcl/make_solver.hpp>
@@ -48,10 +48,6 @@ private:
 
 AmgcMatrixSolver::AmgcMatrixSolver(int maxit, double tolerance): _maxit(maxit), _tolerance(tolerance) {}
 AmgcMatrixSolver::~AmgcMatrixSolver() = default;
-
-void AmgcMatrixSolver::set_matrix(const CsrMatrix& mat){
-	set_matrix(mat, mat.vals());
-}
 
 void AmgcMatrixSolver::set_matrix(const CsrStencil& stencil, const std::vector<double>& mat_values){
 	Impl::matrix_t amgcl_matrix;
