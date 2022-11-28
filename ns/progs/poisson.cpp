@@ -6,6 +6,9 @@
 #include "appr/linear_fem_approximator.hpp"
 #include "appr/fvm_approximator.hpp"
 
+#include "slae/test_solver.hpp"
+#include "slae/a_matrix_solver.hpp"
+
 void linear_fvm1(){
 	// grid
 	std::shared_ptr<Grid> grid = GridBuilder::build_regular1(10, 101);
@@ -15,6 +18,9 @@ void linear_fvm1(){
 
 	// solver
 	PoissonSolver slv(appr);
+
+	// пример установки другого решателя
+	// slv.set_slae_solver(new TestSolver(1.0));
 
 	// bc
 	slv.set_bc_dirichlet(1, 0);
