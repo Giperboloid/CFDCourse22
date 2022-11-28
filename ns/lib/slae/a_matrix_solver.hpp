@@ -6,11 +6,11 @@
 
 class AMatrixSolver{
 public:
-	AMatrixSolver(){};
+    AMatrixSolver(){};
     virtual ~AMatrixSolver() = default;
 
     void set_matrix(const CsrMatrix& mat);
-	virtual void set_matrix(const CsrStencil& mat, const std::vector<double>& mat_values) = 0;
+    virtual void set_matrix(const CsrStencil& mat, const std::vector<double>& mat_values) = 0;
 
     virtual void solve(const std::vector<double>& rhs, std::vector<double>& ret) const = 0;	
 };

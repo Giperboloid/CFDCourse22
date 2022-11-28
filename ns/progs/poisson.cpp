@@ -19,9 +19,8 @@ void linear_fvm1(){
 	// solver
 	PoissonSolver slv(appr);
 
-	// std::unique_ptr<TestSolver> p_test_solver = std::make_unique<TestSolver>(1.0);
-
-	slv.set_solver(new TestSolver(1.0));
+	// пример установки другого решателя
+	// slv.set_slae_solver(new TestSolver(1.0));
 
 	// bc
 	slv.set_bc_dirichlet(1, 0);

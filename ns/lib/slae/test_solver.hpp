@@ -3,7 +3,7 @@
 
 #include "common.hpp"
 #include "slae/csrmat.hpp"
-#include "a_matrix_solver.hpp"
+#include "slae/a_matrix_solver.hpp"
 
 // Тестовый класс. В качестве решения выдает линейную интерполяцию от 0.0 до значения value
 class TestSolver: public AMatrixSolver{

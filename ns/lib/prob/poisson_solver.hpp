@@ -2,7 +2,6 @@
 #define POISSON_SOLVER_HPP
 
 #include "common.hpp"
-#include "slae/amgcl_matrix_solver.hpp"
 #include "appr/spatial_approximator.hpp"
 #include "slae/a_matrix_solver.hpp"
 
@@ -17,7 +16,7 @@ public:
 
 	void solve(const std::function<double(Point)>& f, std::vector<double>& u);
 	void solve(const std::vector<double>& f, std::vector<double>& u);
-	void set_solver(AMatrixSolver* solver);
+	void set_slae_solver(AMatrixSolver* solver);
 private:
 	std::shared_ptr<ASpatialApproximator> _approximator;
 

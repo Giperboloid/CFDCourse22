@@ -3,7 +3,7 @@
 
 #include "common.hpp"
 #include "slae/csrmat.hpp"
-#include "a_matrix_solver.hpp"
+#include "slae/a_matrix_solver.hpp"
 
 // solve SLAE using amgc method
 class AmgcMatrixSolver: public AMatrixSolver{

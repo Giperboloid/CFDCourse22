@@ -1,4 +1,5 @@
 #include "psi_omega/psi_omega_semi_imp_vc.hpp"
+#include "slae/amgcl_matrix_solver.hpp"
 
 class PsiOmega_SemiImpVC::VelocitySolver{
 public:
