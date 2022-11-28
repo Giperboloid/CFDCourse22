@@ -1,2 +1,8 @@
 .vscode/
 ns/build/
+*.swp
+bu
+result.vtk
+octave-workspace
+~*
+
