@@ -13,3 +13,7 @@ target_link_libraries(poisson PUBLIC ${CFDLIB_TARGET})
 # ============= psi_omega_semi_imp
 add_executable(psi_omega_semi_imp psi_omega_semi_imp.cpp)
 target_link_libraries(psi_omega_semi_imp PUBLIC ${CFDLIB_TARGET})
+
+# ============= test_jacoby_solver
+add_executable(test_jacoby_solver test_jacoby_solver.cpp)
+target_link_libraries(test_jacoby_solver PUBLIC ${CFDLIB_TARGET})

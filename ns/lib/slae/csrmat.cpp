@@ -81,6 +81,12 @@ CsrStencil CsrStencil::build(const std::vector<std::set<int>>& stencil_set){
 	return ret;
 }
 
+CsrStencil CsrStencil::build(const std::vector<int>& addr, const std::vector<int>& cols){
+	CsrStencil ret;
+	ret.set_data(std::vector<int>(addr), std::vector<int>(cols));
+	return ret;
+}
+
 void CsrMatrix::matvec(const std::vector<double>& vec, std::vector<double>& ret) const{
 	CsrStencil::matvec(_vals, vec, ret);
 }
