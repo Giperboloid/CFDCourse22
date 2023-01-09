@@ -1,6 +1,5 @@
 #include "slae/jacoby_solver.hpp"
 #include "slae/csrmat.hpp"
-#include "prog_common.hpp"
 #include <string>
 
 double vec_vec_residual(const std::vector<double>& v1, const std::vector<double>& v2){
