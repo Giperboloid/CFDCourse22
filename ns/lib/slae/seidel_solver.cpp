@@ -21,15 +21,10 @@ void SeidelSolver::solve(const std::vector<double>& rhs, std::vector<double>& re
 	std::vector<int> col = this->stencil.cols();
 	std::vector<double> val = this->val;
 	
-	// std::vector<double> u_old(N, 0.0);
 	std::vector<double> u(N, 0.0);
 
 	int iter = 0;
 	while (true){
-		// for (int i=0; i< N; i++){
-		// 	u_old[i] = u[i];
-		// }
-
 		for (int i = 0; i < N; i++){
             int ind1 = add[i];
             int ind2 = add[i+1]-1;
