@@ -20,6 +20,7 @@ private:
 	int max_iterations;
 
 	double solve_residual(const std::vector<double>& x, const std::vector<double>& rhs) const;
+	void _check_Seidel(int N) const;
 };
 
 #endif

@@ -7,6 +7,8 @@
 #include "appr/fvm_approximator.hpp"
 
 #include "slae/test_solver.hpp"
+#include "slae/jacoby_solver.hpp"
+#include "slae/seidel_solver.hpp"
 #include "slae/a_matrix_solver.hpp"
 
 void linear_fvm1(){
@@ -20,7 +22,7 @@ void linear_fvm1(){
 	PoissonSolver slv(appr);
 
 	// пример установки другого решателя
-	// slv.set_slae_solver(new TestSolver(1.0));
+	// slv.set_slae_solver(new JacobySolver(0.0001, 1000));
 
 	// bc
 	slv.set_bc_dirichlet(1, 0);

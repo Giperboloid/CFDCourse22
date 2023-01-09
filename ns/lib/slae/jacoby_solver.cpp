@@ -15,13 +15,15 @@ void JacobySolver::solve(const std::vector<double>& rhs, std::vector<double>& re
 	int N = rhs.size();
 	ret.resize(N);
 
+	_check_Jacobi(N);
+
 	std::vector<int> add = this->stencil.addr();
 	std::vector<int> col = this->stencil.cols();
 	std::vector<double> val = this->val;
 	
 	std::vector<double> u_old(N, 0.0);
 	std::vector<double> u(N, 0.0);
-
+	
 	int iter = 0;
 	while (true){
 		for (int i = 0; i < N; i++){
@@ -73,4 +75,35 @@ double JacobySolver::solve_residual(const std::vector<double>& x, const std::vec
 		s += (err[i] - rhs[i]) * (err[i] - rhs[i]);
 	}
 	return sqrt(s);
+}
+
+void JacobySolver::_check_Jacobi(int N) const{
+	std::vector<int> add = this->stencil.addr();
+	std::vector<int> col = this->stencil.cols();
+	std::vector<double> val = this->val;
+	
+    std::vector<int> bad_rows;
+    for(int i=0; i < N ; i++){
+        int ind1 = add[i];
+        int ind2 = add[i+1]-1;
+
+		std::vector<double> v(ind2-ind1+1, 0.0);
+		for (int j = ind1; j <= ind2; j++){
+			v[j-ind1] = val[j];
+		}
+		double s = 0.0;
+        for (int j = 1; j <= ind2 - ind1; j++){
+			int vv = v[j];
+			s += abs(vv);
+		}
+        if (s > abs(v[0])) bad_rows.push_back(i);
+    }
+
+    if (bad_rows.size() > 0){
+        std::cout << "JacobySolver: Невыполнено достаточное условие сходимости в строках: ";
+		for(int i=0; i < bad_rows.size(); i++){
+			std::cout << bad_rows[i] << " ";
+		}
+		std::cout << "\n";
+    }
 }

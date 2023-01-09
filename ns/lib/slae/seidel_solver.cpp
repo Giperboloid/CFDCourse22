@@ -15,6 +15,8 @@ void SeidelSolver::solve(const std::vector<double>& rhs, std::vector<double>& re
 	int N = rhs.size();
 	ret.resize(N);
 
+	_check_Seidel(N);
+
 	std::vector<int> add = this->stencil.addr();
 	std::vector<int> col = this->stencil.cols();
 	std::vector<double> val = this->val;
@@ -74,4 +76,27 @@ double SeidelSolver::solve_residual(const std::vector<double>& x, const std::vec
 		s += (err[i] - rhs[i]) * (err[i] - rhs[i]);
 	}
 	return sqrt(s);
+}
+
+void SeidelSolver::_check_Seidel(int N) const{
+	std::vector<int> add = this->stencil.addr();
+	std::vector<int> col = this->stencil.cols();
+	std::vector<double> val = this->val;
+	
+    std::vector<int> bad_rows;
+    for(int i=0; i < N ; i++){
+        int ind1 = add[i];
+        int ind2 = add[i+1]-1;
+
+		double d = val[ind1];
+        if (d <= 0) bad_rows.push_back(i);
+    }
+
+    if (bad_rows.size() > 0){
+        std::cout << "SeidelSolver: Невыполнено достаточное условие сходимости в строках: ";
+		for(int i=0; i < bad_rows.size(); i++){
+			std::cout << bad_rows[i] << " ";
+		}
+		std::cout << "\n";
+    }
 }

@@ -52,6 +52,23 @@ bool test_2(double eps){
     return err < eps;
 }
 
+bool test_3(){
+    /* {{-3.0, 2.3, 0.0}, {0.0, 50.0, 1.0}, {16.0, -20.0, -8.0}}.x == {0, 0, 0}
+        values = [3, 2.3, 0.0, 1.0, 8.0, 16.0, -20.0]
+        */
+    std::vector<std::set<int>> stencil_set{{0, 1}, {2}, {0, 1, 2}};
+    std::vector<double> vals{-3.0, 2.3, 50.0, 1.0, -8.0, 16.0, -20.0}; 
+    std::vector<double> rhs{0.0, 0.0, 0.0}; 
+
+    std::vector<double> result;  
+    
+    CsrStencil st = CsrStencil::build(stencil_set);
+    SeidelSolver solver(0.0001, 1000);
+    solver.set_matrix(st, vals);
+    solver.solve(rhs, result);
+    
+    return true;
+}
 
 void print_test_result(bool result, std::string test_name){
     if (result)
@@ -64,6 +81,8 @@ void print_test_result(bool result, std::string test_name){
 int main(){
     print_test_result(test_1(0.001), "Seidel Solver: test_1");
     print_test_result(test_2(0.001), "Seidel Solver: test_2");
-
+    std::cout << "Negative test-------\n";
+    test_3();
+    std::cout << "Negative test end---\n";
     return 0;
 }
