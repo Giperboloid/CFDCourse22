@@ -38,7 +38,7 @@ void SeidelSolver::solve(const std::vector<double>& rhs, std::vector<double>& re
             double s = 0.0;
             for (int j = 1; j <= ind2 - ind1; j++){
 				int cc = c[j];
-				int vv = v[j];
+				double vv = v[j];
                 s -= vv * u[cc];
             }
             s += rhs[i];

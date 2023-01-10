@@ -1,4 +1,7 @@
 #include <iostream>
+#include <string>
+#include <time.h>
+
 #include "common.hpp"
 #include "prog_common.hpp"
 #include "prob/poisson_solver.hpp"
@@ -6,12 +9,13 @@
 #include "appr/linear_fem_approximator.hpp"
 #include "appr/fvm_approximator.hpp"
 
+#include "slae/a_matrix_solver.hpp"
 #include "slae/test_solver.hpp"
 #include "slae/jacoby_solver.hpp"
 #include "slae/seidel_solver.hpp"
-#include "slae/a_matrix_solver.hpp"
+#include "slae/amgcl_matrix_solver.hpp"
 
-void linear_fvm1(){
+void linear_fvm1(AMatrixSolver* solver){
 	// grid
 	std::shared_ptr<Grid> grid = GridBuilder::build_regular1(10, 101);
 
@@ -22,7 +26,7 @@ void linear_fvm1(){
 	PoissonSolver slv(appr);
 
 	// пример установки другого решателя
-	// slv.set_slae_solver(new JacobySolver(0.0001, 1000));
+	slv.set_slae_solver(solver);
 
 	// bc
 	slv.set_bc_dirichlet(1, 0);
@@ -45,7 +49,7 @@ void linear_fvm1(){
 	CHECK_FLOAT3(x[99], 0.995);
 }
 
-void linear_fvm2(){
+void linear_fvm2(AMatrixSolver* solver){
 	// grid
 	std::string grid_filename = from_input_path("rect1.vtk");
 	std::shared_ptr<Grid> grid = GridBuilder::build_from_gmshvtk(grid_filename);
@@ -55,6 +59,7 @@ void linear_fvm2(){
 
 	// solver
 	PoissonSolver slv(appr);
+	slv.set_slae_solver(solver);
 
 	// bc
 	slv.set_bc_dirichlet(1, 0);
@@ -75,7 +80,7 @@ void linear_fvm2(){
 	CHECK_FLOAT3(x[819], 0.148651);
 }
 
-void linear_fem2(){
+void linear_fem2(AMatrixSolver* solver){
 	// grid
 	std::string grid_filename = from_input_path("rect1.vtk");
 	std::shared_ptr<Grid> grid = GridBuilder::build_from_gmshvtk(grid_filename);
@@ -85,6 +90,7 @@ void linear_fem2(){
 
 	// solver
 	PoissonSolver slv(appr);
+	slv.set_slae_solver(solver);
 
 	// bc
 	slv.set_bc_dirichlet(1, 0);
@@ -109,9 +115,20 @@ void linear_fem2(){
 
 int main(){
 	try{
-		linear_fvm1();
-		linear_fvm2();
-		linear_fem2();
+		std::cout << "\n\nAmgcMatrixSolver\n\n";
+		linear_fvm1(new AmgcMatrixSolver());
+		linear_fvm2(new AmgcMatrixSolver());
+		linear_fem2(new AmgcMatrixSolver());
+
+		std::cout << "\n\nJacobySolver\n\n";
+		linear_fvm1(new JacobySolver(0.0001, 100000));
+		linear_fvm2(new JacobySolver(0.00001, 100000));
+		linear_fem2(new JacobySolver(0.00001, 100000));
+
+		std::cout << "\n\nSeidelSolver\n\n";
+		linear_fvm1(new SeidelSolver(0.0001, 100000));
+		linear_fvm2(new SeidelSolver(0.00001, 100000));
+		linear_fem2(new SeidelSolver(0.00001, 100000));
 
 		std::cout << "DONE" << std::endl;
 	} catch (std::exception& e){
