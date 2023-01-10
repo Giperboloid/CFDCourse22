@@ -24,33 +24,42 @@ void JacobySolver::solve(const std::vector<double>& rhs, std::vector<double>& re
 	std::vector<double> u_old(N, 0.0);
 	std::vector<double> u(N, 0.0);
 	
+	// Подготовка кэша матрицы
+	std::vector<std::vector<int>> c;
+	std::vector<std::vector<double>> v;
+	std::vector<int> non_zeros(N, 0.0);
+	c.resize(N);
+	v.resize(N);
+	for (int i = 0; i < N; i++){
+		int ind1 = add[i];
+        int ind2 = add[i+1]-1;
+		c[i].resize(ind2-ind1+1);
+		v[i].resize(ind2-ind1+1);
+		for (int j = 0; j < c[i].size(); j++)
+			c[i][j] = v[i][j] = 0.0;
+		for (int j = ind1; j <= ind2; j++){
+			c[i][j-ind1] = col[j];
+			v[i][j-ind1] = val[j];
+		}
+		non_zeros[i] = ind2 - ind1;
+	}
+
+	// Цикл решения
 	int iter = 0;
 	while (true){
-		for (int i = 0; i < N; i++){
-            int ind1 = add[i];
-            int ind2 = add[i+1]-1;
-
-            std::vector<int> c(ind2-ind1+1, 0.0);
-            std::vector<double> v(ind2-ind1+1, 0.0);
-       		for (int j = ind1; j <= ind2; j++){
-				c[j-ind1] = col[j];
-				v[j-ind1] = val[j];
-			}
+		for (int i = 0; i < N; i++){          
             double s = 0.0;
-            for (int j = 1; j <= ind2 - ind1; j++){
-				int cc = c[j];
-				double vv = v[j];
-                s -= vv * u_old[cc];
-            }
+            for (int j = 1; j <= non_zeros[i]; j++)
+                s -= v[i][j] * u_old[c[i][j]];
             s += rhs[i];
-            u[i] = s / v[0];
+            u[i] = s / v[i][0];
         }
 		
 		if (solve_residual(u, rhs) < this->eps){
             break;
         }
 
-		for (int i=0; i< N; i++){
+		for (int i = 0; i < N; i++){
 			u_old[i] = u[i];
 		}
 
