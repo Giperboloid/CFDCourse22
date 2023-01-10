@@ -9,7 +9,13 @@ class SorMatrixSolver : public AMatrixSolver {
 
 public:
 
-    SorMatrixSolver(unsigned MaxIter = 1000, double Tol = 1e-8);
+    /**
+     * @brief SOR solver constructor
+     * @param MaxIter - upper bound of possible iterations count
+     * @param Tol - tolerance
+     * @param IsSym - is SLAE-matrix already symmetric
+     */
+    SorMatrixSolver(unsigned MaxIter = 1000, double Tol = 1e-8, bool IsSym = false);
 
     ~SorMatrixSolver() override = default;
 
@@ -23,8 +29,7 @@ private:
 
     double Tolerance;
     unsigned MaxIterations;
-
-    uint8_t RelaxParam {1};
+    bool IsInitiallySymmetric;
 };
 
 
