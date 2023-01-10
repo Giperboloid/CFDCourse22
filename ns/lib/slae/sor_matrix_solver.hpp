@@ -9,7 +9,7 @@ class SorMatrixSolver : public AMatrixSolver {
 
 public:
 
-    SorMatrixSolver(uint MaxIter = 1000, double Tol = 1e-8);
+    SorMatrixSolver(unsigned MaxIter = 1000, double Tol = 1e-8);
 
     ~SorMatrixSolver() override = default;
 
@@ -22,7 +22,7 @@ private:
     std::unique_ptr<Implementation> Impl;
 
     double Tolerance;
-    uint MaxIterations;
+    unsigned MaxIterations;
 
     uint8_t RelaxParam {1};
 };

@@ -9,7 +9,7 @@ public:
 
 };
 
-SorMatrixSolver::SorMatrixSolver(uint MaxIter, double Tol)
+SorMatrixSolver::SorMatrixSolver(unsigned MaxIter, double Tol)
 : MaxIterations(MaxIter), Tolerance(Tol)
 {}
 
