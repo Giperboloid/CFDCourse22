@@ -1,9 +1,10 @@
 #include "jacoby_solver.hpp"
 #include <iostream>
 
-JacobySolver::JacobySolver(double eps, int max_iterations){
+JacobySolver::JacobySolver(double eps, int max_iterations, int skip_res_iretations){
 	this->eps = eps;
 	this->max_iterations = max_iterations;
+	this->skip_iterations = skip_res_iretations + 1;
 }
 
 void JacobySolver::set_matrix(const CsrStencil& mat, const std::vector<double>& mat_values){
@@ -55,13 +56,9 @@ void JacobySolver::solve(const std::vector<double>& rhs, std::vector<double>& re
             u[i] = s / v[i][0];
         }
 		
-		if (solve_residual(u, rhs) < this->eps){
-            break;
-        }
+		if (iter % skip_iterations == 0 && solve_residual(u, rhs) < this->eps) break;
 
-		for (int i = 0; i < N; i++){
-			u_old[i] = u[i];
-		}
+		for (int i = 0; i < N; i++) u_old[i] = u[i];
 
 		iter += 1;
         if (iter >= this->max_iterations){
@@ -70,9 +67,7 @@ void JacobySolver::solve(const std::vector<double>& rhs, std::vector<double>& re
         }
 	}
 	
-	for(int i=0;i<N;i++){
-		ret[i] = u[i];
-	}
+	for(int i = 0; i < N; i++) ret[i] = u[i];
 }
 
 

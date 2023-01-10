@@ -1,9 +1,10 @@
 #include "seidel_solver.hpp"
 #include <iostream>
 
-SeidelSolver::SeidelSolver(double eps, int max_iterations){
+SeidelSolver::SeidelSolver(double eps, int max_iterations, int skip_res_iretations){
 	this->eps = eps;
 	this->max_iterations = max_iterations;
+	this->skip_iterations = skip_res_iretations + 1;
 }
 
 void SeidelSolver::set_matrix(const CsrStencil& mat, const std::vector<double>& mat_values){
@@ -48,17 +49,13 @@ void SeidelSolver::solve(const std::vector<double>& rhs, std::vector<double>& re
 	while (true){
 		for (int i = 0; i < N; i++){
             double s = 0.0;
-            for (int j = 1; j <= non_zeros[i]; j++)
-                s -= v[i][j] * u[c[i][j]];
+            for (int j = 1; j <= non_zeros[i]; j++) s -= v[i][j] * u[c[i][j]];
             s += rhs[i];
             u[i] = s / v[i][0];
         }
 		
-		if (solve_residual(u, rhs) < this->eps){
-            break;
-        }
-
-
+		if (iter % skip_iterations == 0 && solve_residual(u, rhs) < this->eps) break;
+        
 		iter += 1;
         if (iter >= this->max_iterations){
             std::cout << "WARN: The maximum number of iterations of " << this->max_iterations << " has been reached\n";
@@ -66,9 +63,7 @@ void SeidelSolver::solve(const std::vector<double>& rhs, std::vector<double>& re
         }
 	}
 	
-	for(int i=0;i<N;i++){
-		ret[i] = u[i];
-	}
+	for(int i=0;i<N;i++) ret[i] = u[i];
 }
 
 
@@ -76,7 +71,7 @@ double SeidelSolver::solve_residual(const std::vector<double>& x, const std::vec
 	std::vector<double> err(x.size(), 0.0); 
 	this->stencil.matvec(this->val, x, err);
 	double s = 0.0;
-	for (int i=0;i<err.size(); i++){
+	for (int i = 0; i < err.size(); i++){
 		s += (err[i] - rhs[i]) * (err[i] - rhs[i]);
 	}
 	return sqrt(s);

@@ -7,7 +7,7 @@
 
 class JacobySolver: public AMatrixSolver{
 public:
-	JacobySolver(double eps=0.001, int max_iterations=1000);
+	JacobySolver(double eps=0.001, int max_iterations=1000, int skip_res_iretations=0);
 	~JacobySolver(){};
 
 	void set_matrix(const CsrStencil& mat, const std::vector<double>& mat_values) override;
@@ -18,6 +18,7 @@ private:
 	std::vector<double> val;
 	double eps;
 	int max_iterations;
+	int skip_iterations;
 
 	double solve_residual(const std::vector<double>& x, const std::vector<double>& rhs) const;
 	void _check_Jacobi(int N) const;
