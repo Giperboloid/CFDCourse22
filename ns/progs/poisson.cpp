@@ -16,7 +16,7 @@
 #include "slae/seidel_solver.hpp"
 #include "slae/amgcl_matrix_solver.hpp"
 
-void linear_fvm1(AMatrixSolver* solver){
+void linear_fvm1(AMatrixSolver* solver) {
 	// grid
 	std::shared_ptr<Grid> grid = GridBuilder::build_regular1(10, 101);
 
@@ -34,7 +34,7 @@ void linear_fvm1(AMatrixSolver* solver){
 	slv.set_bc_dirichlet(2, 1);
 
 	// rhs
-	std::vector<double> rhs = appr->approximate([](Point p){ return 0; });
+	std::vector<double> rhs = appr->approximate([](Point p) { return 0; });
 
 	// solve
 	std::vector<double> x;
@@ -43,14 +43,14 @@ void linear_fvm1(AMatrixSolver* solver){
 
 	// show solution
 	appr->vtk_save_scalar(from_output_path("poisson_fvm.vtk"), x);
-	
+
 	// check solution
 	CHECK_FLOAT3(x[0], 0.005);
 	CHECK_FLOAT3(x[5], 0.055);
 	CHECK_FLOAT3(x[99], 0.995);
 }
 
-void linear_fvm2(AMatrixSolver* solver){
+void linear_fvm2(AMatrixSolver* solver) {
 	// grid
 	std::string grid_filename = from_input_path("rect1.vtk");
 	std::shared_ptr<Grid> grid = GridBuilder::build_from_gmshvtk(grid_filename);
@@ -67,7 +67,7 @@ void linear_fvm2(AMatrixSolver* solver){
 	slv.set_bc_dirichlet(4, 1);
 
 	// rhs
-	std::vector<double> rhs = appr->approximate([](Point p){ return 0; });
+	std::vector<double> rhs = appr->approximate([](Point p) { return 0; });
 
 	// solve
 	std::vector<double> x;
@@ -81,7 +81,7 @@ void linear_fvm2(AMatrixSolver* solver){
 	CHECK_FLOAT3(x[819], 0.148651);
 }
 
-void linear_fem2(AMatrixSolver* solver){
+void linear_fem2(AMatrixSolver* solver) {
 	// grid
 	std::string grid_filename = from_input_path("rect1.vtk");
 	std::shared_ptr<Grid> grid = GridBuilder::build_from_gmshvtk(grid_filename);
@@ -98,7 +98,7 @@ void linear_fem2(AMatrixSolver* solver){
 	slv.set_bc_dirichlet(4, 1);
 
 	// rhs
-	std::vector<double> rhs = appr->approximate([](Point p){ return 0; });
+	std::vector<double> rhs = appr->approximate([](Point p) { return 0; });
 
 	// solve
 	std::vector<double> x;
@@ -114,8 +114,8 @@ void linear_fem2(AMatrixSolver* solver){
 	CHECK_FLOAT3(x[2], 1);
 }
 
-int main(){
-	try{
+int main() {
+	try {
 		std::cout << "\n\nAmgcMatrixSolver\n\n";
 		linear_fvm1(new AmgcMatrixSolver());
 		linear_fvm2(new AmgcMatrixSolver());
@@ -132,7 +132,8 @@ int main(){
 		linear_fem2(new SeidelSolver(0.00001, 100000, 10000));
 
 		std::cout << "DONE" << std::endl;
-	} catch (std::exception& e){
+	}
+	catch (std::exception& e) {
 		std::cout << "ERROR: " << " " << e.what() << std::endl;
 	}
 }

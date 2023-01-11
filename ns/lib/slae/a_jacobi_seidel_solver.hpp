@@ -5,7 +5,7 @@
 #include "slae/csrmat.hpp"
 #include "slae/a_matrix_solver.hpp"
 
-class AJacobiSeidelSolver: public AMatrixSolver{
+class AJacobiSeidelSolver : public AMatrixSolver {
 public:
 	AJacobiSeidelSolver();
 
@@ -14,13 +14,13 @@ public:
 
 	virtual void _check_matrix(int N) const = 0;
 
-    // Описание матрицы
+	// Описание матрицы
 	CsrStencil stencil;
 	std::vector<double> val;
 	int N;
 
-    //Кэш для ускорения работы с матрицей
-    std::vector<std::vector<int>> c;
+	//Кэш для ускорения работы с матрицей
+	std::vector<std::vector<int>> c;
 	std::vector<std::vector<double>> v;
 	std::vector<int> non_zeros;
 };
