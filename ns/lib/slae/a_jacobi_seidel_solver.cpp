@@ -1,11 +1,7 @@
 #include <iostream>
 #include "a_jacobi_seidel_solver.hpp"
 
-AJacobiSeidelSolver::AJacobiSeidelSolver(double eps, int max_iterations, int skip_res_iretations){
-    this->eps = eps;
-	this->max_iterations = max_iterations;
-	this->skip_iterations = skip_res_iretations + 1;
-}
+AJacobiSeidelSolver::AJacobiSeidelSolver(){}
 
 void AJacobiSeidelSolver::set_matrix(const CsrStencil& mat, const std::vector<double>& mat_values){
 	this->stencil = mat;
@@ -29,6 +25,8 @@ void AJacobiSeidelSolver::set_matrix(const CsrStencil& mat, const std::vector<do
 		}
 		non_zeros[i] = ind2 - ind1;
 	}
+
+	this->_check_matrix(this->N);
 }
 
 double AJacobiSeidelSolver::solve_residual(const std::vector<double>& x, const std::vector<double>& rhs) const{

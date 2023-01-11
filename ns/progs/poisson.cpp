@@ -10,6 +10,7 @@
 #include "appr/fvm_approximator.hpp"
 
 #include "slae/a_matrix_solver.hpp"
+#include "slae/a_jacobi_seidel_solver.hpp"
 #include "slae/test_solver.hpp"
 #include "slae/jacobi_solver.hpp"
 #include "slae/seidel_solver.hpp"
