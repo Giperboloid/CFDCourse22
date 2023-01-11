@@ -31,7 +31,6 @@ public:
 	// build from vector of sets
 	// i-th entry of vector -- column indices in the i-th row
 	static CsrStencil build(const std::vector<std::set<int>>& stencil_set);
-	static CsrStencil build(const std::vector<int>& addr, const std::vector<int>& cols);
 private:
 	std::vector<int> _addr = {0};
 	std::vector<int> _cols;

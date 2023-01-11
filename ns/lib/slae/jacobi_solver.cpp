@@ -1,6 +1,6 @@
 #include "jacobi_solver.hpp"
 #include <iostream>
-#include <math.h>
+#include <cmath>
 
 JacobiSolver::JacobiSolver(double eps, int max_iterations, int skip_res_iretations) {
 	this->eps = eps;
@@ -9,8 +9,6 @@ JacobiSolver::JacobiSolver(double eps, int max_iterations, int skip_res_iretatio
 }
 
 void JacobiSolver::solve(const std::vector<double>& rhs, std::vector<double>& ret) const {
-	ret.resize(N);
-
 	if (rhs.size() != N) {
 		throw std::runtime_error("Invalid Matrix-right side sizes");
 	}
@@ -22,6 +20,7 @@ void JacobiSolver::solve(const std::vector<double>& rhs, std::vector<double>& re
 
 	std::vector<double> u_old(N, 0.0);
 
+	bool convergence = false;
 	for (int iter = 0; iter < this->max_iterations; iter++) {
 		for (int i = 0; i < N; i++) {
 			double s = 0.0;
@@ -31,11 +30,14 @@ void JacobiSolver::solve(const std::vector<double>& rhs, std::vector<double>& re
 			ret[i] = s / v[i][0];
 		}
 
-		if (iter % skip_iterations == 0 && solve_residual(ret, rhs) < this->eps) break;
+		if (iter % skip_iterations == 0 && solve_residual(ret, rhs) < this->eps) {
+			convergence = true;
+			break;
+		}
 
-		for (int i = 0; i < N; i++) u_old[i] = ret[i];
+		std::swap(u_old, ret);
 	}
-	std::cout << "WARN: The maximum number of iterations of " << this->max_iterations << " has been reached\n";
+	if (!convergence) std::cout << "WARN: The maximum number of iterations of " << this->max_iterations << " has been reached\n";
 }
 
 void JacobiSolver::_check_matrix(int N) const {
@@ -51,10 +53,10 @@ void JacobiSolver::_check_matrix(int N) const {
 		double s = 0.0;
 		for (int j = 1; j <= ind2 - ind1; j++) {
 			int vv = v[j];
-			s += abs(vv);
+			s += std::fabs(vv);
 		}
-		if (s > abs(v[0])) bad_rows.push_back(i);
-		if (fabs(v[0]) < 1e-15) throw std::runtime_error("Found zero on the diagonal");
+		if (s > std::fabs(v[0])) bad_rows.push_back(i);
+		if (std::fabs(v[0]) < 1e-15) throw std::runtime_error("Found zero on the diagonal");
 	}
 
 	if (bad_rows.size() > 0) {

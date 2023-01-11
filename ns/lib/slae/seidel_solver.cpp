@@ -1,6 +1,6 @@
 #include "seidel_solver.hpp"
 #include <iostream>
-#include <math.h>
+#include <cmath>
 
 SeidelSolver::SeidelSolver(double eps, int max_iterations, int skip_res_iretations) {
 	this->eps = eps;
@@ -18,6 +18,7 @@ void SeidelSolver::solve(const std::vector<double>& rhs, std::vector<double>& re
 		for (int i = 0; i < N; i++) ret[i] = 0.0;
 	}
 
+	bool convergence = false;
 	for (int iter = 0; iter < this->max_iterations; iter++) {
 		for (int i = 0; i < N; i++) {
 			double s = 0.0;
@@ -26,9 +27,12 @@ void SeidelSolver::solve(const std::vector<double>& rhs, std::vector<double>& re
 			ret[i] = s / v[i][0];
 		}
 
-		if (iter % skip_iterations == 0 && solve_residual(ret, rhs) < this->eps) break;
+		if (iter % skip_iterations == 0 && solve_residual(ret, rhs) < this->eps) {
+			convergence = true;
+			break;
+		}
 	}
-	std::cout << "WARN: The maximum number of iterations of " << this->max_iterations << " has been reached\n";
+	if (!convergence) std::cout << "WARN: The maximum number of iterations of " << this->max_iterations << " has been reached\n";
 }
 
 void SeidelSolver::_check_matrix(int N) const {
@@ -39,7 +43,7 @@ void SeidelSolver::_check_matrix(int N) const {
 
 		double d = this->val[ind1];
 		if (d <= 0) bad_rows.push_back(i);
-		if (fabs(d) < 1e-15) throw std::runtime_error("Found zero on the diagonal");
+		if (std::fabs(d) < 1e-15) throw std::runtime_error("Found zero on the diagonal");
 	}
 
 	if (bad_rows.size() > 0) {

@@ -6,21 +6,21 @@ AJacobiSeidelSolver::AJacobiSeidelSolver() {}
 void AJacobiSeidelSolver::set_matrix(const CsrStencil& mat, const std::vector<double>& mat_values) {
 	this->stencil = mat;
 	this->val = mat_values;
-	this->N = stencil.n_rows();
+	this->N = mat.n_rows();
 
 	this->c.resize(this->N);
 	this->v.resize(this->N);
 	this->non_zeros.resize(this->N);
 
 	for (int i = 0; i < N; i++) {
-		int ind1 = (this->stencil.addr())[i];
-		int ind2 = (this->stencil.addr())[i + 1] - 1;
+		int ind1 = (mat.addr())[i];
+		int ind2 = (mat.addr())[i + 1] - 1;
 		c[i].resize(ind2 - ind1 + 1);
 		v[i].resize(ind2 - ind1 + 1);
 		for (int j = 0; j < c[i].size(); j++)
 			c[i][j] = v[i][j] = 0.0;
 		for (int j = ind1; j <= ind2; j++) {
-			c[i][j - ind1] = (this->stencil.cols())[j];
+			c[i][j - ind1] = (mat.cols())[j];
 			v[i][j - ind1] = (this->val)[j];
 		}
 		non_zeros[i] = ind2 - ind1;
