@@ -1,18 +1,18 @@
-#include "jacoby_solver.hpp"
+#include "jacobi_solver.hpp"
 #include <iostream>
 
-JacobySolver::JacobySolver(double eps, int max_iterations, int skip_res_iretations){
+JacobiSolver::JacobiSolver(double eps, int max_iterations, int skip_res_iretations){
 	this->eps = eps;
 	this->max_iterations = max_iterations;
 	this->skip_iterations = skip_res_iretations + 1;
 }
 
-void JacobySolver::set_matrix(const CsrStencil& mat, const std::vector<double>& mat_values){
+void JacobiSolver::set_matrix(const CsrStencil& mat, const std::vector<double>& mat_values){
 	this->stencil = mat;
 	this->val = mat_values;
 }
 
-void JacobySolver::solve(const std::vector<double>& rhs, std::vector<double>& ret) const{
+void JacobiSolver::solve(const std::vector<double>& rhs, std::vector<double>& ret) const{
 	int N = rhs.size();
 	ret.resize(N);
 
@@ -71,7 +71,7 @@ void JacobySolver::solve(const std::vector<double>& rhs, std::vector<double>& re
 }
 
 
-double JacobySolver::solve_residual(const std::vector<double>& x, const std::vector<double>& rhs) const{
+double JacobiSolver::solve_residual(const std::vector<double>& x, const std::vector<double>& rhs) const{
 	std::vector<double> err(x.size(), 0.0); 
 	this->stencil.matvec(this->val, x, err);
 	double s = 0.0;
@@ -81,7 +81,7 @@ double JacobySolver::solve_residual(const std::vector<double>& x, const std::vec
 	return sqrt(s);
 }
 
-void JacobySolver::_check_Jacobi(int N) const{
+void JacobiSolver::_check_Jacobi(int N) const{
 	std::vector<int> add = this->stencil.addr();
 	std::vector<int> col = this->stencil.cols();
 	std::vector<double> val = this->val;
@@ -104,7 +104,7 @@ void JacobySolver::_check_Jacobi(int N) const{
     }
 
     if (bad_rows.size() > 0){
-        std::cout << "JacobySolver: Невыполнено достаточное условие сходимости в строках: ";
+        std::cout << "JacobiSolver: Невыполнено достаточное условие сходимости в строках: ";
 		for(int i=0; i < bad_rows.size(); i++){
 			std::cout << bad_rows[i] << " ";
 		}

@@ -11,7 +11,7 @@
 
 #include "slae/a_matrix_solver.hpp"
 #include "slae/test_solver.hpp"
-#include "slae/jacoby_solver.hpp"
+#include "slae/jacobi_solver.hpp"
 #include "slae/seidel_solver.hpp"
 #include "slae/amgcl_matrix_solver.hpp"
 
@@ -121,9 +121,9 @@ int main(){
 		linear_fem2(new AmgcMatrixSolver());
 
 		std::cout << "\n\nJacobySolver\n\n";
-		linear_fvm1(new JacobySolver(0.0001, 100000, 100));
-		linear_fvm2(new JacobySolver(0.00001, 100000, 10000));
-		linear_fem2(new JacobySolver(0.00001, 100000, 10000));
+		linear_fvm1(new JacobiSolver(0.0001, 100000, 100));
+		linear_fvm2(new JacobiSolver(0.00001, 100000, 10000));
+		linear_fem2(new JacobiSolver(0.00001, 100000, 10000));
 
 		std::cout << "\n\nSeidelSolver\n\n";
 		linear_fvm1(new SeidelSolver(0.0001, 100000, 100));

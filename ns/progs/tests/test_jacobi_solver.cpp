@@ -1,4 +1,4 @@
-#include "slae/jacoby_solver.hpp"
+#include "slae/jacobi_solver.hpp"
 #include "slae/csrmat.hpp"
 #include <string>
 
@@ -23,7 +23,7 @@ bool test_1(double eps){
     std::vector<double> result; 
     
     CsrStencil st = CsrStencil::build(stencil_set);
-    JacobySolver solver(0.0001, 1000);
+    JacobiSolver solver(0.0001, 1000);
     solver.set_matrix(st, vals);
     solver.solve(rhs, result);
     double err = vec_vec_residual(result, answer);
@@ -44,7 +44,7 @@ bool test_2(double eps){
     std::vector<double> result;  
     
     CsrStencil st = CsrStencil::build(stencil_set);
-    JacobySolver solver(0.0001, 1000);
+    JacobiSolver solver(0.0001, 1000);
     solver.set_matrix(st, vals);
     solver.solve(rhs, result);
     double err = vec_vec_residual(result, answer);
@@ -63,7 +63,7 @@ bool test_3(){
     std::vector<double> result;  
     
     CsrStencil st = CsrStencil::build(stencil_set);
-    JacobySolver solver(0.0001, 1000);
+    JacobiSolver solver(0.0001, 1000);
     solver.set_matrix(st, vals);
     solver.solve(rhs, result);
     

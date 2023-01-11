@@ -1,14 +1,14 @@
-#ifndef JACOBY_SOLVER_HPP
-#define JACOBY_SOLVER_HPP
+#ifndef JACOBI_SOLVER_HPP
+#define JACOBI_SOLVER_HPP
 
 #include "common.hpp"
 #include "slae/csrmat.hpp"
 #include "slae/a_matrix_solver.hpp"
 
-class JacobySolver: public AMatrixSolver{
+class JacobiSolver: public AMatrixSolver{
 public:
-	JacobySolver(double eps=0.001, int max_iterations=1000, int skip_res_iretations=0);
-	~JacobySolver(){};
+	JacobiSolver(double eps=0.001, int max_iterations=1000, int skip_res_iretations=0);
+	~JacobiSolver(){};
 
 	void set_matrix(const CsrStencil& mat, const std::vector<double>& mat_values) override;
 
