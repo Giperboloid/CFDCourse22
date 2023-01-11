@@ -13,7 +13,7 @@ public:
      * @brief SOR solver constructor
      * @param MaxIter - upper bound of possible iterations count
      * @param Tol - tolerance
-     * @param IsSym - is SLAE-matrix already symmetric
+     * @param IsSym - is SLAE-matrix symmetric
      */
     SorMatrixSolver(unsigned MaxIter = 1000, double Tol = 1e-8, bool IsSym = false);
 
