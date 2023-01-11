@@ -22,8 +22,7 @@ void JacobiSolver::solve(const std::vector<double>& rhs, std::vector<double>& re
 
 	std::vector<double> u_old(N, 0.0);
 
-	int iter = 0;
-	while (true) {
+	for (int iter = 0; iter < this->max_iterations; iter++) {
 		for (int i = 0; i < N; i++) {
 			double s = 0.0;
 			for (int j = 1; j <= non_zeros[i]; j++)
@@ -35,13 +34,8 @@ void JacobiSolver::solve(const std::vector<double>& rhs, std::vector<double>& re
 		if (iter % skip_iterations == 0 && solve_residual(ret, rhs) < this->eps) break;
 
 		for (int i = 0; i < N; i++) u_old[i] = ret[i];
-
-		iter += 1;
-		if (iter >= this->max_iterations) {
-			std::cout << "WARN: The maximum number of iterations of " << this->max_iterations << " has been reached\n";
-			break;
-		}
 	}
+	std::cout << "WARN: The maximum number of iterations of " << this->max_iterations << " has been reached\n";
 }
 
 void JacobiSolver::_check_matrix(int N) const {

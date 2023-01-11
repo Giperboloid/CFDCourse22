@@ -18,8 +18,7 @@ void SeidelSolver::solve(const std::vector<double>& rhs, std::vector<double>& re
 		for (int i = 0; i < N; i++) ret[i] = 0.0;
 	}
 
-	int iter = 0;
-	while (true) {
+	for (int iter = 0; iter < this->max_iterations; iter++) {
 		for (int i = 0; i < N; i++) {
 			double s = 0.0;
 			for (int j = 1; j <= non_zeros[i]; j++) s -= v[i][j] * ret[c[i][j]];
@@ -28,15 +27,8 @@ void SeidelSolver::solve(const std::vector<double>& rhs, std::vector<double>& re
 		}
 
 		if (iter % skip_iterations == 0 && solve_residual(ret, rhs) < this->eps) break;
-
-		iter += 1;
-		if (iter >= this->max_iterations) {
-			std::cout << "WARN: The maximum number of iterations of " << this->max_iterations << " has been reached\n";
-			break;
-		}
 	}
-
-	for (int i = 0; i < N; i++) ret[i] = ret[i];
+	std::cout << "WARN: The maximum number of iterations of " << this->max_iterations << " has been reached\n";
 }
 
 void SeidelSolver::_check_matrix(int N) const {
