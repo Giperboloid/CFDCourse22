@@ -2,19 +2,11 @@
 #include <iostream>
 #include <cmath>
 
-JacobiSolver::JacobiSolver(double eps, int max_iterations, int skip_res_iretations) : AJacobiSeidelSolver(eps, max_iterations, skip_iterations){}
+JacobiSolver::JacobiSolver(double eps, int max_iterations, int skip_res_iretations): AJacobiSeidelSolver(eps, max_iterations, skip_iterations) {}
 
-void JacobiSolver::solve(const std::vector<double>& rhs, std::vector<double>& ret) const {
-	if (rhs.size() != N) {
-		throw std::runtime_error("Invalid Matrix-right side sizes");
-	}
-
-	if (ret.size() != N) {
-		ret.resize(N);
-		for (int i = 0; i < N; i++) ret[i] = 0.0;
-	}
-
+bool JacobiSolver::make_iterations(const std::vector<double>& rhs, std::vector<double>& ret) const {
 	std::vector<double> u_old(N, 0.0);
+	std::swap(u_old, ret);
 
 	bool convergence = false;
 	for (int iter = 0; iter < this->max_iterations; iter++) {
@@ -33,7 +25,7 @@ void JacobiSolver::solve(const std::vector<double>& rhs, std::vector<double>& re
 
 		std::swap(u_old, ret);
 	}
-	if (!convergence) std::cout << "WARN: The maximum number of iterations of " << this->max_iterations << " has been reached\n";
+	return convergence;
 }
 
 void JacobiSolver::_check_matrix(int N) const {

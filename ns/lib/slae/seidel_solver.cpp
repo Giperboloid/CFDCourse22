@@ -2,18 +2,9 @@
 #include <iostream>
 #include <cmath>
 
-SeidelSolver::SeidelSolver(double eps, int max_iterations, int skip_res_iretations) : AJacobiSeidelSolver(eps, max_iterations, skip_iterations){}
+SeidelSolver::SeidelSolver(double eps, int max_iterations, int skip_res_iretations): AJacobiSeidelSolver(eps, max_iterations, skip_iterations) {}
 
-void SeidelSolver::solve(const std::vector<double>& rhs, std::vector<double>& ret) const {
-	if (rhs.size() != N) {
-		throw std::runtime_error("Invalid Matrix-right side sizes");
-	}
-
-	if (ret.size() != N) {
-		ret.resize(N);
-		for (int i = 0; i < N; i++) ret[i] = 0.0;
-	}
-
+bool SeidelSolver::make_iterations(const std::vector<double>& rhs, std::vector<double>& ret) const {
 	bool convergence = false;
 	for (int iter = 0; iter < this->max_iterations; iter++) {
 		for (int i = 0; i < N; i++) {
@@ -28,7 +19,7 @@ void SeidelSolver::solve(const std::vector<double>& rhs, std::vector<double>& re
 			break;
 		}
 	}
-	if (!convergence) std::cout << "WARN: The maximum number of iterations of " << this->max_iterations << " has been reached\n";
+	return convergence;
 }
 
 void SeidelSolver::_check_matrix(int N) const {
