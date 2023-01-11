@@ -70,6 +70,55 @@ bool test_3(){
     return true;
 }
 
+bool test_4(){
+    /* {{3.0, 2.3, 0.0}, {0.0, 0.0, 1.0}, {16.0, -20.0, 8.0}}.x == {0, 0, 0}
+        values = [3, 2.3, 0.0, 1.0, 8.0, 16.0, -20.0]
+        */
+    std::vector<std::set<int>> stencil_set{{0, 1}, {2}, {0, 1, 2}};
+    std::vector<double> vals{3.0, 2.3, 0.0, 1.0, 8.0, 16.0, -20.0}; 
+    std::vector<double> rhs{0.0, 0.0, 0.0}; 
+
+    std::vector<double> result;  
+    
+    CsrStencil st = CsrStencil::build(stencil_set);
+    SeidelSolver solver(0.0001, 1000);
+    try
+    {
+        solver.set_matrix(st, vals);
+        return false;
+    }
+    catch(const std::exception& e)
+    {
+        return true;
+    }
+}
+
+bool test_5(){
+    /* {{5.0, 0.0, 0.0}, {1.0, 2.0, 0.0}, {0.0, 0.0, 6.0}}.{1.0, 2.0, 3.0} == {5.0, 5.0, 18.0}
+        addres = [0, 1, 3, 4]
+        columns = [1, 1, 2, 3]
+        values = [5.0, 1.0, 2.0, 6.0]*/
+    std::vector<std::set<int>> stencil_set{{0}, {0, 1}, {2}};
+    std::vector<double> vals{5.0, 2.0, 1.0, 6.0}; 
+    std::vector<double> rhs{5.0, 5.0, 18.0, 10.0}; // Неверный размер
+
+    std::vector<double> answer{1.0, 2.0, 3.0}; 
+    std::vector<double> result; 
+    
+    CsrStencil st = CsrStencil::build(stencil_set);
+    SeidelSolver solver(0.0001, 1000);
+    try
+    {
+        solver.set_matrix(st, vals);
+        solver.solve(rhs, result);
+        return false;
+    }
+    catch(const std::exception& e)
+    {
+        return true;
+    }
+}
+
 void print_test_result(bool result, std::string test_name){
     if (result)
         std::cout << "Test \"" << test_name << "\" completed\n";
@@ -81,8 +130,10 @@ void print_test_result(bool result, std::string test_name){
 int main(){
     print_test_result(test_1(0.001), "Seidel Solver: test_1");
     print_test_result(test_2(0.001), "Seidel Solver: test_2");
-    std::cout << "Negative test-------\n";
+    std::cout << "Warn test-------\n";
     test_3();
-    std::cout << "Negative test end---\n";
+    std::cout << "Warn test end---\n";
+    print_test_result(test_4(), "Seidel Solver: test_4");
+    print_test_result(test_5(), "Seidel Solver: test_5");
     return 0;
 }

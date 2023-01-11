@@ -1,22 +1,23 @@
 #include "jacobi_solver.hpp"
 #include <iostream>
+#include <math.h>
 
-JacobiSolver::JacobiSolver(double eps, int max_iterations, int skip_res_iretations)
-{
+JacobiSolver::JacobiSolver(double eps, int max_iterations, int skip_res_iretations){
 	this->eps = eps;
 	this->max_iterations = max_iterations;
 	this->skip_iterations = skip_res_iretations + 1;
 }
 
-void JacobiSolver::solve(const std::vector<double> &rhs, std::vector<double> &ret) const
-{
-	int N = this->N;
+void JacobiSolver::solve(const std::vector<double> &rhs, std::vector<double> &ret) const {
 	ret.resize(N);
 	
+	if (rhs.size() != N){
+		throw std::runtime_error("Invalid Matrix-right side sizes");
+	}
+
 	std::vector<double> u_old(N, 0.0);
 	std::vector<double> u(N, 0.0);
 	
-	// Цикл решения
 	int iter = 0;
 	while (true){
 		for (int i = 0; i < N; i++){          
@@ -57,10 +58,11 @@ void JacobiSolver::_check_matrix(int N) const{
 			s += abs(vv);
 		}
 		if (s > abs(v[0])) bad_rows.push_back(i);
+		if (fabs(v[0]) < 1e-15) throw std::runtime_error("Found zero on the diagonal");
     }
 
 	if (bad_rows.size() > 0){
-		std::cout << "JacobiSolver: Невыполнено достаточное условие сходимости в строках: ";
+		std::cout << "WARN: JacobiSolver: Не выполнено достаточное условие сходимости в строках: ";
 		for(int i=0; i < bad_rows.size(); i++) std::cout << bad_rows[i] << " ";
 		std::cout << "\n";
     }
