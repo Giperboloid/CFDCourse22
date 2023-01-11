@@ -8,10 +8,12 @@ bool SeidelSolver::make_iterations(const std::vector<double>& rhs, std::vector<d
 	bool convergence = false;
 	for (int iter = 0; iter < this->max_iterations; iter++) {
 		for (int i = 0; i < N; i++) {
+			int ind1 = (this->stencil.addr())[i];
 			double s = 0.0;
-			for (int j = 1; j <= non_zeros[i]; j++) s -= v[i][j] * ret[c[i][j]];
+			for (int j = 1; j <= non_zeros[i]; j++)
+				s -= (this->val)[j + ind1] * ret[(this->stencil.cols())[j + ind1]];
 			s += rhs[i];
-			ret[i] = s / v[i][0];
+			ret[i] = s / (this->val)[ind1];
 		}
 
 		if (iter % skip_iterations == 0 && solve_residual(ret, rhs) < this->eps) {

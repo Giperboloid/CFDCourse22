@@ -28,9 +28,7 @@ protected:
 	std::vector<double> val;
 	int N;
 
-	//Кэш для ускорения работы с матрицей
-	std::vector<std::vector<int>> c;
-	std::vector<std::vector<double>> v;
+	//Кэш кол-ва элементов в строке для ускорения работы с матрицей
 	std::vector<int> non_zeros;
 };
 

@@ -12,23 +12,9 @@ void AJacobiSeidelSolver::set_matrix(const CsrStencil& mat, const std::vector<do
 	this->val = mat_values;
 	this->N = mat.n_rows();
 
-	this->c.resize(this->N);
-	this->v.resize(this->N);
 	this->non_zeros.resize(this->N);
-
-	for (int i = 0; i < N; i++) {
-		int ind1 = (mat.addr())[i];
-		int ind2 = (mat.addr())[i + 1] - 1;
-		c[i].resize(ind2 - ind1 + 1);
-		v[i].resize(ind2 - ind1 + 1);
-		for (int j = 0; j < c[i].size(); j++)
-			c[i][j] = v[i][j] = 0.0;
-		for (int j = ind1; j <= ind2; j++) {
-			c[i][j - ind1] = (mat.cols())[j];
-			v[i][j - ind1] = (this->val)[j];
-		}
-		non_zeros[i] = ind2 - ind1;
-	}
+	for (int i = 0; i < N; i++)
+		non_zeros[i] = (mat.addr())[i + 1] - 1 - (mat.addr())[i];
 
 	this->_check_matrix(this->N);
 }
