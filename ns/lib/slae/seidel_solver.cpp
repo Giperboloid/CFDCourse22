@@ -2,11 +2,7 @@
 #include <iostream>
 #include <cmath>
 
-SeidelSolver::SeidelSolver(double eps, int max_iterations, int skip_res_iretations) {
-	this->eps = eps;
-	this->max_iterations = max_iterations;
-	this->skip_iterations = skip_res_iretations + 1;
-}
+SeidelSolver::SeidelSolver(double eps, int max_iterations, int skip_res_iretations) : AJacobiSeidelSolver(eps, max_iterations, skip_iterations){}
 
 void SeidelSolver::solve(const std::vector<double>& rhs, std::vector<double>& ret) const {
 	if (rhs.size() != N) {

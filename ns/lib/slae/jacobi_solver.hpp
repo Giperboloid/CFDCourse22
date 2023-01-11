@@ -13,11 +13,6 @@ public:
 	void solve(const std::vector<double>& rhs, std::vector<double>& ret) const override;
 
 private:
-	//Параметры решателя
-	double eps;
-	int max_iterations;
-	int skip_iterations;
-
 	void _check_matrix(int N) const override;
 };
 

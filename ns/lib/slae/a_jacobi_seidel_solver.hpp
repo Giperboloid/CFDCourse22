@@ -7,7 +7,7 @@
 
 class AJacobiSeidelSolver : public AMatrixSolver {
 public:
-	AJacobiSeidelSolver();
+	AJacobiSeidelSolver(double eps, int max_iterations, int skip_res_iretations);
 	virtual ~AJacobiSeidelSolver() = default;
 
 	void set_matrix(const CsrStencil& mat, const std::vector<double>& mat_values) override;
@@ -16,6 +16,11 @@ protected:
 	double solve_residual(const std::vector<double>& x, const std::vector<double>& rhs) const;
 
 	virtual void _check_matrix(int N) const = 0;
+
+	//Параметры решателя
+	double eps;
+	int max_iterations;
+	int skip_iterations;
 
 	// Описание матрицы
 	CsrStencil stencil;
