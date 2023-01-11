@@ -15,8 +15,12 @@ void JacobiSolver::solve(const std::vector<double>& rhs, std::vector<double>& re
 		throw std::runtime_error("Invalid Matrix-right side sizes");
 	}
 
+	if (ret.size() != N) {
+		ret.resize(N);
+		for (int i = 0; i < N; i++) ret[i] = 0.0;
+	}
+
 	std::vector<double> u_old(N, 0.0);
-	std::vector<double> u(N, 0.0);
 
 	int iter = 0;
 	while (true) {
@@ -25,12 +29,12 @@ void JacobiSolver::solve(const std::vector<double>& rhs, std::vector<double>& re
 			for (int j = 1; j <= non_zeros[i]; j++)
 				s -= v[i][j] * u_old[c[i][j]];
 			s += rhs[i];
-			u[i] = s / v[i][0];
+			ret[i] = s / v[i][0];
 		}
 
-		if (iter % skip_iterations == 0 && solve_residual(u, rhs) < this->eps) break;
+		if (iter % skip_iterations == 0 && solve_residual(ret, rhs) < this->eps) break;
 
-		for (int i = 0; i < N; i++) u_old[i] = u[i];
+		for (int i = 0; i < N; i++) u_old[i] = ret[i];
 
 		iter += 1;
 		if (iter >= this->max_iterations) {
@@ -38,8 +42,6 @@ void JacobiSolver::solve(const std::vector<double>& rhs, std::vector<double>& re
 			break;
 		}
 	}
-
-	for (int i = 0; i < N; i++) ret[i] = u[i];
 }
 
 void JacobiSolver::_check_matrix(int N) const {
