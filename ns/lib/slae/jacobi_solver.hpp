@@ -15,7 +15,7 @@ private:
 	void create_solver_cache() const override;
 	void _check_matrix(int N) const override;
 
-	std::vector<double>* u_old = new std::vector<double>;
+	mutable std::vector<double> u_old;
 };
 
 #endif

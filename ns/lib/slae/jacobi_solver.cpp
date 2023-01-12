@@ -5,12 +5,12 @@
 JacobiSolver::JacobiSolver(double eps, int max_iterations, int skip_res_iretations): AJacobiSeidelSolver(eps, max_iterations, skip_res_iretations) {}
 
 void JacobiSolver::make_iteration(const std::vector<double>& rhs, std::vector<double>& ret) const {
-	std::swap(*this->u_old, ret);
+	std::swap(this->u_old, ret);
 	for (int i = 0; i < N; i++) {
 		int ind1 = (this->stencil.addr())[i];
 		double s = 0.0;
 		for (int j = 1; j <= non_zeros[i]; j++)
-			s -= (this->val)[j + ind1] * (*this->u_old)[(this->stencil.cols())[j + ind1]];
+			s -= (this->val)[j + ind1] * this->u_old[(this->stencil.cols())[j + ind1]];
 
 		s += rhs[i];
 		ret[i] = s / (this->val)[ind1];
@@ -18,7 +18,7 @@ void JacobiSolver::make_iteration(const std::vector<double>& rhs, std::vector<do
 }
 
 void JacobiSolver::create_solver_cache() const {
-	(*this->u_old).resize(this->N);
+	this->u_old.resize(this->N);
 }
 
 void JacobiSolver::_check_matrix(int N) const {
