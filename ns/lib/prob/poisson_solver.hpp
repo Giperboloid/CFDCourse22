@@ -4,6 +4,7 @@
 #include "common.hpp"
 #include "appr/spatial_approximator.hpp"
 #include "slae/a_matrix_solver.hpp"
+#include "slae/sor_matrix_solver.hpp"
 
 class PoissonSolver{
 public:

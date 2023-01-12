@@ -15,7 +15,7 @@ public:
      * @param Tol - tolerance
      * @param IsSym - is SLAE-matrix symmetric
      */
-    SorMatrixSolver(unsigned MaxIter = 1000, double Tol = 1e-8, bool IsSym = false);
+    explicit SorMatrixSolver(unsigned MaxIter = 1000, double Tol = 1e-8, bool IsSym = false);
 
     ~SorMatrixSolver() override = default;
 
@@ -24,7 +24,7 @@ public:
 
 private:
 
-    struct Implementation;
+    class Implementation;
     std::unique_ptr<Implementation> Impl;
 
     double Tolerance;
