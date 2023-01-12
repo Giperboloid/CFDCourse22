@@ -11,8 +11,11 @@ public:
 	~JacobiSolver() {};
 
 private:
-	bool make_iterations(const std::vector<double>& rhs, std::vector<double>& ret) const override;
+	void make_iteration(const std::vector<double>& rhs, std::vector<double>& ret) const override;
+	void create_solver_cache() const override;
 	void _check_matrix(int N) const override;
+
+	std::vector<double>* u_old = new std::vector<double>;
 };
 
 #endif

@@ -2,27 +2,20 @@
 #include <iostream>
 #include <cmath>
 
-SeidelSolver::SeidelSolver(double eps, int max_iterations, int skip_res_iretations): AJacobiSeidelSolver(eps, max_iterations, skip_iterations) {}
+SeidelSolver::SeidelSolver(double eps, int max_iterations, int skip_res_iretations): AJacobiSeidelSolver(eps, max_iterations, skip_res_iretations) {}
 
-bool SeidelSolver::make_iterations(const std::vector<double>& rhs, std::vector<double>& ret) const {
-	bool convergence = false;
-	for (int iter = 0; iter < this->max_iterations; iter++) {
-		for (int i = 0; i < N; i++) {
-			int ind1 = (this->stencil.addr())[i];
-			double s = 0.0;
-			for (int j = 1; j <= non_zeros[i]; j++)
-				s -= (this->val)[j + ind1] * ret[(this->stencil.cols())[j + ind1]];
-			s += rhs[i];
-			ret[i] = s / (this->val)[ind1];
-		}
-
-		if (iter % skip_iterations == 0 && solve_residual(ret, rhs) < this->eps) {
-			convergence = true;
-			break;
-		}
+void SeidelSolver::make_iteration(const std::vector<double>& rhs, std::vector<double>& ret) const {
+	for (int i = 0; i < N; i++) {
+		int ind1 = (this->stencil.addr())[i];
+		double s = 0.0;
+		for (int j = 1; j <= non_zeros[i]; j++)
+			s -= (this->val)[j + ind1] * ret[(this->stencil.cols())[j + ind1]];
+		s += rhs[i];
+		ret[i] = s / (this->val)[ind1];
 	}
-	return convergence;
 }
+
+void SeidelSolver::create_solver_cache() const {}
 
 void SeidelSolver::_check_matrix(int N) const {
 	std::vector<int> bad_rows;

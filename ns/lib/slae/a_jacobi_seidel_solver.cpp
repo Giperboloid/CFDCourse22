@@ -17,6 +17,7 @@ void AJacobiSeidelSolver::set_matrix(const CsrStencil& mat, const std::vector<do
 		non_zeros[i] = (mat.addr())[i + 1] - 1 - (mat.addr())[i];
 
 	this->_check_matrix(this->N);
+	this->create_solver_cache();
 }
 
 void AJacobiSeidelSolver::solve(const std::vector<double>& rhs, std::vector<double>& ret) const
@@ -30,7 +31,16 @@ void AJacobiSeidelSolver::solve(const std::vector<double>& rhs, std::vector<doub
 		for (int i = 0; i < N; i++) ret[i] = 0.0;
 	}
 
-	if (!this->make_iterations(rhs, ret)) std::cout << "WARN: The maximum number of iterations of " << this->max_iterations << " has been reached\n";
+	bool convergence = false;
+	for (int iter = 0; iter < this->max_iterations; iter++) {
+		this->make_iteration(rhs, ret);
+
+		if (iter % skip_iterations == 0 && solve_residual(ret, rhs) < this->eps) {
+			convergence = true;
+			break;
+		}
+	}
+	if (!convergence) std::cout << "WARN: The maximum number of iterations of " << this->max_iterations << " has been reached\n";
 }
 
 double AJacobiSeidelSolver::solve_residual(const std::vector<double>& x, const std::vector<double>& rhs) const {

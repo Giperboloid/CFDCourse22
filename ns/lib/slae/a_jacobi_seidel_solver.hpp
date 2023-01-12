@@ -13,8 +13,9 @@ public:
 	void set_matrix(const CsrStencil& mat, const std::vector<double>& mat_values) override;
 	void solve(const std::vector<double>& rhs, std::vector<double>& ret) const override;
 protected:
-	virtual bool make_iterations(const std::vector<double>& rhs, std::vector<double>& ret) const = 0;
+	virtual void make_iteration(const std::vector<double>& rhs, std::vector<double>& ret) const = 0;
 	double solve_residual(const std::vector<double>& x, const std::vector<double>& rhs) const;
+	virtual void create_solver_cache() const = 0;
 
 	virtual void _check_matrix(int N) const = 0;
 
