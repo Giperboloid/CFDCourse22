@@ -4,7 +4,7 @@
 AJacobiSeidelSolver::AJacobiSeidelSolver(double eps, int max_iterations, int skip_res_iretations) {
 	this->eps = eps;
 	this->max_iterations = max_iterations;
-	this->skip_iterations = skip_iterations + 2;
+	this->skip_iterations = skip_iterations + 1;
 }
 
 void AJacobiSeidelSolver::set_matrix(const CsrStencil& mat, const std::vector<double>& mat_values) {
