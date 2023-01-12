@@ -13,3 +13,6 @@ target_link_libraries(poisson PUBLIC ${CFDLIB_TARGET})
 # ============= psi_omega_semi_imp
 add_executable(psi_omega_semi_imp psi_omega_semi_imp.cpp)
 target_link_libraries(psi_omega_semi_imp PUBLIC ${CFDLIB_TARGET})
+
+# ============= directory for tests
+add_subdirectory(tests)
