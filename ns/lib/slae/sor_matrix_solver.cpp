@@ -72,9 +72,6 @@ public:
         InitMatrixWithoutOwning(L, LowerStencil);
 
         SetOptionalRelaxParameter();
-        if(RelaxParam != 1)
-            throw std::runtime_error("START TEST");
-
     }
 
     /**
@@ -83,7 +80,19 @@ public:
      */
     bool CheckSystemForSymmetry()
     {
-        return false;
+        auto transpose_upper_matrix_ptr = amgcl::backend::transpose(U);
+        if(!transpose_upper_matrix_ptr)
+            throw std::runtime_error("Check symmetry error: can not get transpose matrix");
+
+        auto sum_result_matrix_ptr = amgcl::backend::sum(-1.0, L, 1.0, *transpose_upper_matrix_ptr);
+        if(!sum_result_matrix_ptr)
+            throw std::runtime_error("Check symmetry error: can not get sum of matrices");
+
+        // TODO: nnz != 0 in poisson ...
+        if(sum_result_matrix_ptr->nnz)
+            return false;
+
+        return true;
     }
 
     /**
@@ -227,8 +236,11 @@ void SorMatrixSolver::solve(const std::vector<double> &rhs, std::vector<double> 
         if(IsInitiallySymmetric || Impl->CheckSystemForSymmetry())
             Impl->SolveSSor();
         else
+        {
+            throw std::runtime_error("TEST");
             Impl->SolveSor();
+        }
     }
     else
-        throw std::runtime_error("Matrix was not passed to the solver");
+        throw std::runtime_error("Solve error: matrix was not passed to the solver");
 }
