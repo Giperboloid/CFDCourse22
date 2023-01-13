@@ -46,11 +46,11 @@ public:
         if(!D_vals)
             throw std::runtime_error("Solver init error: cant get system's diagonal");
 
-        (*D_vals).swap(DiagonalStencil.vals);
-
-        if(DiagonalStencil.vals.size() != A.nrows)
+        if((*D_vals).size() != A.nrows)
             throw std::runtime_error("Solver init error: the main diagonal of system matrix contains zeroes, "
                                      "SOR(Symmetric SOR) method can not be used");
+
+        (*D_vals).swap(DiagonalStencil.vals);
 
         DiagonalStencil.n_rows = DiagonalStencil.nnz = static_cast<long>(A.nrows);
         DiagonalStencil.addr.resize(DiagonalStencil.n_rows + 1);
@@ -69,8 +69,8 @@ public:
 
         InitMatrixWithoutOwning(D, DiagonalStencil);
 
-        GetTriangularComponent(UpperStencil, SystemStencil, true);
-        GetTriangularComponent(LowerStencil, SystemStencil, false);
+        GetTriangularComponent(UpperStencil);
+        GetTriangularComponent(LowerStencil, false);
 
         InitMatrixWithoutOwning(U, UpperStencil);
         InitMatrixWithoutOwning(L, LowerStencil);
@@ -101,6 +101,18 @@ public:
 private:
 
     /**
+     * @brief Fills numa_vec with data from vec.
+     * @tparam T
+     * @param numa_vec
+     * @param vec
+     */
+    template <typename T>
+    void FillNumaFromVector(amgcl::backend::numa_vector<T>& numa_vec, const std::vector<T>& vec) {
+        amgcl::backend::numa_vector<T> numa_tmp (vec);
+        numa_vec.swap(numa_tmp);
+    }
+
+    /**
      * @brief This method implements checking for symmetry by scanning zeroes in [L + transpose(U)] matrix.
      */
     void CheckSystemForSymmetry()
@@ -113,7 +125,7 @@ private:
         if(!sum_result_matrix_ptr)
             throw std::runtime_error("Check symmetry error: can not get sum of matrices");
 
-        // TODO: nnz >> real count of non zero elements...
+        // TODO: nnz > real count of non zero elements...
         if(!sum_result_matrix_ptr->nnz)
             IsSystemSymmetric = true;
     }
@@ -135,40 +147,39 @@ private:
     /**
      * @brief Fills upper- / lower- triangular matrices stencil from incoming system stencil.
      * @param out_stencil
-     * @param init_stencil
      * @param upper: upper triangular if true, lower triangular otherwise.
      */
-    static void GetTriangularComponent(Stencil& out_stencil, const Stencil& init_stencil, bool upper = true) {
+    void GetTriangularComponent(Stencil& out_stencil, bool upper = true) {
 
         /// Creating upper triangular matrix U:
-        std::vector<long> U_addr(init_stencil.addr.size());
+        std::vector<long> U_addr(SystemStencil.addr.size());
         std::vector<long> U_cols;
         std::vector<double> U_vals;
 
         // just fill with old (system matrices) values here
-        for(auto i = 0; i < init_stencil.addr.size(); ++i)
-            U_addr[i] = init_stencil.addr[i];
+        for(auto i = 0; i < SystemStencil.addr.size(); ++i)
+            U_addr[i] = SystemStencil.addr[i];
 
-        for(auto i = 0; i < init_stencil.addr.size() - 1; ++i)
+        for(auto i = 0; i < SystemStencil.addr.size() - 1; ++i)
         {
-            for(auto j = init_stencil.addr[i]; j < init_stencil.addr[i + 1]; ++j)
+            for(auto j = SystemStencil.addr[i]; j < SystemStencil.addr[i + 1]; ++j)
             {
                 if(upper)
                 {
-                    if(init_stencil.cols[j] > i)
+                    if(SystemStencil.cols[j] > i)
                     {
-                        U_vals.emplace_back(init_stencil.vals[j]);
-                        U_cols.emplace_back(init_stencil.cols[j]);
+                        U_vals.emplace_back(SystemStencil.vals[j]);
+                        U_cols.emplace_back(SystemStencil.cols[j]);
                     }
                     else
                         for(auto k = i; k < U_addr.size() - 1; ++k, U_addr[k]-=1);
                 }
                 else
                 {
-                    if(init_stencil.cols[j] < i)
+                    if(SystemStencil.cols[j] < i)
                     {
-                        U_vals.emplace_back(init_stencil.vals[j]);
-                        U_cols.emplace_back(init_stencil.cols[j]);
+                        U_vals.emplace_back(SystemStencil.vals[j]);
+                        U_cols.emplace_back(SystemStencil.cols[j]);
                     }
                     else
                         for(auto k = i; k < U_addr.size() - 1; ++k, U_addr[k]-=1);
@@ -176,15 +187,11 @@ private:
             }
         }
 
-        amgcl::backend::numa_vector<long> numa_U_addr (U_addr);
-        amgcl::backend::numa_vector<long> numa_U_cols (U_cols);
-        amgcl::backend::numa_vector<double> numa_U_vals (U_vals);
+        FillNumaFromVector(out_stencil.addr, U_addr);
+        FillNumaFromVector(out_stencil.cols, U_cols);
+        FillNumaFromVector(out_stencil.vals, U_vals);
 
-        out_stencil.addr.swap(numa_U_addr);
-        out_stencil.cols.swap(numa_U_cols);
-        out_stencil.vals.swap(numa_U_vals);
-
-        out_stencil.n_rows = init_stencil.n_rows;
+        out_stencil.n_rows = SystemStencil.n_rows;
         out_stencil.nnz = static_cast<long>(out_stencil.vals.size());
     }
 
@@ -226,8 +233,25 @@ private:
     }
 
 
+//    /**
+//     * @brief
+//     */
+//    void GetSchemasInverseComponent() {
+//        if(!IsSystemSymmetric) {
+//
+//
+//
+//        }
+//        else {
+//
+//
+//
+//        }
+//    }
+
+
     Stencil SystemStencil, DiagonalStencil,
-            LowerStencil, UpperStencil;
+            LowerStencil, UpperStencil, SchemasInverseCompStencil;
 
     /// A = D + L + U factorization parts:
     Matrix D, L, U;
@@ -260,7 +284,6 @@ void SorMatrixSolver::solve(const std::vector<double> &rhs, std::vector<double> 
         else
         {
             throw std::runtime_error("TEST");
-            Impl->SolveSor();
         }
     }
     else
