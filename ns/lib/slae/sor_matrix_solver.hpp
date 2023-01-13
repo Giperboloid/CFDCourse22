@@ -11,11 +11,12 @@ public:
 
     /**
      * @brief SOR solver constructor
-     * @param MaxIter - upper bound of possible iterations count
+     * @param RelaxParam - relaxation parameter (aka omega)
      * @param Tol - tolerance
-     * @param IsSym - is SLAE-matrix symmetric
+     * @param MaxIter - upper bound of possible iterations count
+     * @param IsSym - is SLAE symmetric
      */
-    explicit SorMatrixSolver(unsigned MaxIter = 1000, double Tol = 1e-8, bool IsSym = false);
+    explicit SorMatrixSolver(double RelaxParam = 0.0, double Tol = 1e-8, unsigned MaxIter = 1000, bool IsSym = false);
 
     ~SorMatrixSolver() override = default;
 
@@ -27,9 +28,10 @@ private:
     class Implementation;
     std::unique_ptr<Implementation> Impl;
 
+    double RelaxParameter;
     double Tolerance;
     unsigned MaxIterations;
-    bool IsInitiallySymmetric;
+    bool IsSystemSymmetric;
 };
 
 

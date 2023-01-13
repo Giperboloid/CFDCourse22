@@ -7,8 +7,6 @@ class SorMatrixSolver::Implementation {
 
     using Matrix = amgcl::backend::crs<double, long>;
 
-public:
-
     const double UniversalRelaxParameter = 1.95;
 
     typedef struct MatrixStencil {
@@ -19,14 +17,18 @@ public:
         long nnz{0};
     } Stencil;
 
-    Implementation(const CsrStencil &stencil, const std::vector<double> &mat_values)
+public:
+
+    Implementation(const CsrStencil &stencil, const std::vector<double> &mat_values,
+                   double _relax_param, double _tol, unsigned _max_iter, bool _is_sym)
     : SystemStencil {
         .addr = std::vector<long>(stencil.addr().begin(), stencil.addr().end()),
         .cols = std::vector<long>(stencil.cols().begin(), stencil.cols().end()),
         .vals = mat_values,
         .n_rows = stencil.n_rows(),
         .nnz = stencil.n_nonzero()
-    }
+    },
+    RelaxParameter(_relax_param), Tolerance(_tol), MaxIterations(_max_iter), IsSystemSymmetric(_is_sym)
     {}
 
     /**
@@ -73,14 +75,35 @@ public:
         InitMatrixWithoutOwning(U, UpperStencil);
         InitMatrixWithoutOwning(L, LowerStencil);
 
-        SetOptionalRelaxParameter();
+        /// Following parameter must stay in (0, 2) interval
+        if(RelaxParameter <= 0.01 || RelaxParameter >= 1.99)
+            SetOptionalRelaxParameter();
+
+        if(!IsSystemSymmetric)
+            CheckSystemForSymmetry();
+
+    }
+
+    [[nodiscard]] bool GetSymmetryStatus() const {
+        return IsSystemSymmetric;
     }
 
     /**
-     *
-     * @return
+     * @brief Following method implements solver procedure in Asymmetric system case.
      */
-    bool CheckSystemForSymmetry()
+    void SolveSor() {};
+
+    /**
+     * @brief Following method implements solver procedure in Symmetric system case.
+     */
+    void SolveSSor() {};
+
+private:
+
+    /**
+     * @brief This method implements checking for symmetry by scanning zeroes in [L + transpose(U)] matrix.
+     */
+    void CheckSystemForSymmetry()
     {
         auto transpose_upper_matrix_ptr = amgcl::backend::transpose(U);
         if(!transpose_upper_matrix_ptr)
@@ -91,26 +114,12 @@ public:
             throw std::runtime_error("Check symmetry error: can not get sum of matrices");
 
         // TODO: nnz >> real count of non zero elements...
-        if(sum_result_matrix_ptr->nnz)
-            return false;
-
-        return true;
+        if(!sum_result_matrix_ptr->nnz)
+            IsSystemSymmetric = true;
     }
 
     /**
-     *
-     */
-    void SolveSor() {};
-
-    /**
-     *
-     */
-    void SolveSSor() {};
-
-private:
-
-    /**
-    *
+    * @brief Method fills matrix with appropriate stencil data.
     * @param matrix
     * @param stencil_ptr
     */
@@ -124,10 +133,10 @@ private:
     }
 
     /**
-     *
+     * @brief Fills upper- / lower- triangular matrices stencil from incoming system stencil.
      * @param out_stencil
      * @param init_stencil
-     * @param upper
+     * @param upper: upper triangular if true, lower triangular otherwise.
      */
     static void GetTriangularComponent(Stencil& out_stencil, const Stencil& init_stencil, bool upper = true) {
 
@@ -180,7 +189,10 @@ private:
     }
 
     /**
-     *
+     * @brief Implements the selection of optional relaxation parameter if input
+     * value wasn't provided or was invalid.
+     * @details w (aka omega) = 2 / 1 + sqrt(1 - spectral_radius*spectral_radius)\n
+     * Or if w (aka omega) >= 2 after selection -> set w to UniversalRelaxParameter = 1.95
      */
     void SetOptionalRelaxParameter() {
 
@@ -204,10 +216,10 @@ private:
         /// Get upper bound of spectral radius by Gershgorin disk theorem with scaling by D^-1:
         double spectral_radius = amgcl::backend::spectral_radius<true, Matrix>(*product_matrix);
 
-        RelaxParam = 2.0 / (1.0 + sqrt(1.0 - spectral_radius * spectral_radius));
+        RelaxParameter = 2.0 / (1.0 + sqrt(1.0 - spectral_radius * spectral_radius));
 
-        if(RelaxParam >= 2)
-            RelaxParam = UniversalRelaxParameter;
+        if(RelaxParameter >= 2)
+            RelaxParameter = UniversalRelaxParameter;
 
         /// Revert D matrices values
         D.val = DiagonalStencil.vals.data();
@@ -220,26 +232,30 @@ private:
     /// A = D + L + U factorization parts:
     Matrix D, L, U;
 
-    /// Optional relaxation parameter: (0, 2); initially 1 - Gauss-Seidel case.
-    // TODO: think about outside specified value
-    double RelaxParam {1};
+    /// Local solve parameters:
+    /* Optional relaxation parameter: (0, 2); 1 - Gauss-Seidel case */
+    double RelaxParameter;
+    double Tolerance;
+    unsigned MaxIterations;
+    bool IsSystemSymmetric;
 
 };
 
-SorMatrixSolver::SorMatrixSolver(unsigned MaxIter, double Tol, bool IsSym)
-: MaxIterations(MaxIter), Tolerance(Tol), IsInitiallySymmetric(IsSym)
+SorMatrixSolver::SorMatrixSolver(double RelaxParam, double Tol, unsigned MaxIter, bool IsSym)
+: RelaxParameter(RelaxParam), Tolerance(Tol), MaxIterations(MaxIter), IsSystemSymmetric(IsSym)
 {}
 
-void SorMatrixSolver::set_matrix(const CsrStencil &stencil, const std::vector<double> &mat_values)
+void SorMatrixSolver::set_matrix(const CsrStencil &Stencil, const std::vector<double> &MatValues)
 {
-    Impl = std::make_unique<SorMatrixSolver::Implementation>(stencil, mat_values);
+    Impl = std::make_unique<SorMatrixSolver::Implementation>(Stencil, MatValues, RelaxParameter,
+                                                             Tolerance, MaxIterations, IsSystemSymmetric);
     Impl->Initialize();
 }
 
 void SorMatrixSolver::solve(const std::vector<double> &rhs, std::vector<double> &ret) const {
     if(Impl)
     {
-        if(IsInitiallySymmetric || Impl->CheckSystemForSymmetry())
+        if(Impl->GetSymmetryStatus())
             Impl->SolveSSor();
         else
         {
