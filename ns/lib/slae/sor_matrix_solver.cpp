@@ -9,6 +9,8 @@ class SorMatrixSolver::Implementation {
 
 public:
 
+    const double UniversalRelaxParameter = 1.95;
+
     typedef struct MatrixStencil {
         amgcl::backend::numa_vector<long> addr;
         amgcl::backend::numa_vector<long> cols;
@@ -65,7 +67,7 @@ public:
 
         InitMatrixWithoutOwning(D, DiagonalStencil);
 
-        GetTriangularComponent(UpperStencil, SystemStencil);
+        GetTriangularComponent(UpperStencil, SystemStencil, true);
         GetTriangularComponent(LowerStencil, SystemStencil, false);
 
         InitMatrixWithoutOwning(U, UpperStencil);
@@ -88,7 +90,7 @@ public:
         if(!sum_result_matrix_ptr)
             throw std::runtime_error("Check symmetry error: can not get sum of matrices");
 
-        // TODO: nnz != 0 in poisson ...
+        // TODO: nnz >> real count of non zero elements...
         if(sum_result_matrix_ptr->nnz)
             return false;
 
@@ -199,9 +201,13 @@ private:
         if(!product_matrix)
             throw std::runtime_error("Setting relaxation parameter error: can not get matrices product");
 
-        double spectral_radius = amgcl::backend::spectral_radius<false, Matrix>(*product_matrix);
+        /// Get upper bound of spectral radius by Gershgorin disk theorem with scaling by D^-1:
+        double spectral_radius = amgcl::backend::spectral_radius<true, Matrix>(*product_matrix);
 
         RelaxParam = 2.0 / (1.0 + sqrt(1.0 - spectral_radius * spectral_radius));
+
+        if(RelaxParam >= 2)
+            RelaxParam = UniversalRelaxParameter;
 
         /// Revert D matrices values
         D.val = DiagonalStencil.vals.data();
@@ -214,9 +220,9 @@ private:
     /// A = D + L + U factorization parts:
     Matrix D, L, U;
 
-    /// Optional relaxation parameter: (0, 2); initially 1.
+    /// Optional relaxation parameter: (0, 2); initially 1 - Gauss-Seidel case.
+    // TODO: think about outside specified value
     double RelaxParam {1};
-
 
 };
 
