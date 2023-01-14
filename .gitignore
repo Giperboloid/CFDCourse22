@@ -5,4 +5,5 @@ bu
 result.vtk
 octave-workspace
 ~*
-
+.idea
+ns/cmake*

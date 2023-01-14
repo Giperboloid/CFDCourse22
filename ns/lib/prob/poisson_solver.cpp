@@ -1,9 +1,9 @@
 #include "prob/poisson_solver.hpp"
 #include "dbg/printer.hpp"
-#include "slae/amgcl_matrix_solver.hpp"
+#include "slae/sor_matrix_solver.hpp"
 
 PoissonSolver::PoissonSolver(std::shared_ptr<ASpatialApproximator> appr): _approximator(appr) {
-	_slae_solver.reset(new AmgcMatrixSolver());
+	_slae_solver.reset(new SorMatrixSolver());
 }
 
 void PoissonSolver::set_bc_dirichlet(int btype, double value){
