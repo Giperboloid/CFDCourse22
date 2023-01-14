@@ -16,7 +16,7 @@ public:
      * @param MaxIter - upper bound of possible iterations count
      * @param IsSym - is SLAE symmetric
      */
-    explicit SorMatrixSolver(double RelaxParam = 0.0, double Tol = 1e-8, unsigned MaxIter = 1000, bool IsSym = false);
+    explicit SorMatrixSolver(double RelaxParam = 0.0, double Tol = 1e-8, unsigned MaxIter = 4000, bool IsSym = false);
 
     ~SorMatrixSolver() override = default;
 
